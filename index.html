@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XX肽颜 · 双11大促 | 全套物料 Demo 完整版</title>
+<style>
+  /* ===== 品牌设计系统变量 ===== */
+  :root {
+    --brand-rose: #D4A5A5; --brand-rose-light: #E8CACA; --brand-rose-dark: #B88585;
+    --brand-dark: #2C2C2C; --brand-dark-soft: #4A4A4A;
+    --white: #FFFFFF; --off-white: #FAF8F7;
+    --accent-red: #E74C3C; --accent-gold: #D4A5A5;
+    --gradient-luxury: linear-gradient(135deg, #2C2C2C 0%, #3D3D3D 50%, #D4A5A5 100%);
+    --shadow-soft: 0 4px 20px rgba(44,44,44,0.08);
+    --shadow-card: 0 8px 32px rgba(212,165,165,0.15);
+    --radius-sm: 8px; --radius-md: 16px; --radius-lg: 24px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Noto Sans CJK SC", "Source Han Sans CN", sans-serif;
+    background: var(--off-white); color: var(--brand-dark); line-height: 1.6;
+  }
+
+  /* ===== Sticky Nav ===== */
+  .nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(255,255,255,0.95); backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(212,165,165,0.2);
+    padding: 12px 24px;
+    display: flex; align-items: center; gap: 8px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .nav a {
+    text-decoration: none; color: var(--brand-dark);
+    padding: 6px 16px; border-radius: 20px;
+    font-size: 13px; font-weight: 600; white-space: nowrap;
+    transition: all 0.2s;
+  }
+  .nav a:hover, .nav a.active { background: var(--brand-rose-light); color: var(--brand-dark); }
+
+  /* ===== Hero ===== */
+  .hero {
+    background: var(--gradient-luxury); padding: 70px 40px;
+    text-align: center; color: white; position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content:''; position:absolute; top:-50%; right:-20%;
+    width:600px; height:600px;
+    background:radial-gradient(circle,rgba(212,165,165,0.3)0%,transparent70%); border-radius:50%;
+  }
+  .hero-badge { display:inline-block; background:var(--brand-rose); color:var(--brand-dark); padding:8px24px; border-radius:24px; font-size:14px; font-weight:700; letter-spacing:3px; margin-bottom:24px; }
+  .hero h1 { font-size:52px; font-weight:900; margin-bottom:14px; letter-spacing:6px; }
+  .hero .slogan { font-size:22px; opacity:0.9; font-weight:300; letter-spacing:8px; }
+  .hero-stats { display:flex; justify-content:center; gap:48px; margin-top:44px; flex-wrap:wrap; }
+  .stat-item { text-align:center; }
+  .stat-num { font-size:42px; font-weight:900; color:var(--brand-rose); }
+  .stat-label { font-size:13px; opacity:0.7; margin-top:4px; }
+
+  /* ===== Section ===== */
+  .section { max-width:1200px; margin:0 auto; padding:56px 28px; }
+  .section-title { font-size:30px; font-weight:800; margin-bottom:10px; display:flex; align-items:center; gap:14px; }
+  .section-title::before { content:''; display:inline-block; width:4px; height:32px; background:var(--brand-rose); border-radius:2px; }
+  .section-desc { color:#888; margin-bottom:32px; padding-left:18px; font-size:15px; }
+
+  /* ===== Color Palette ===== */
+  .palette-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:18px; margin-top:24px; }
+  .palette-item { border-radius:var(--radius-md); overflow:hidden; box-shadow:var(--shadow-soft); }
+  .palette-swatch { height:110px; }
+  .palette-info { padding:16px 20px; background:white; border-top:1px solid #f0f0f0; }
+  .palette-name { font-weight:800; font-size:16px; }
+  .palette-hex { font-size:13px; color:#888; font-family:'SF Mono',monospace; margin-top:2px; }
+  .palette-use { font-size:12px; color:#aaa; margin-top:6px; }
+
+  /* ===== Poster Grid (thumbnails in overview) ===== */
+  .poster-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:24px; margin-top:24px; }
+  .poster-card { background:white; border-radius:var(--radius-md); overflow:hidden; box-shadow:var(--shadow-card); transition:transform0.3s,box-shadow0.3s; cursor:pointer; }
+  .poster-card:hover { transform:translateY(-6px); box-shadow:0 16px 48px rgba(212,165,165,0.25); }
+  .poster-preview { position:relative; overflow:hidden; }
+  .ratio-taobao { aspect-ratio:1/1; } .ratio-xhs { aspect-ratio:3/4; } .ratio-douyin { aspect-ratio:9/16; } .ratio-wechat { aspect-ratio:21/9; }
+  .poster-preview > div { width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px; text-align:center; }
+  .poster-meta { padding:14px18px; border-top:1px solid #f5f5f5; display:flex; justify-content:space-between; align-items:center; }
+  .poster-tag { font-size:11px; font-weight:600; padding:4px12px; border-radius:12px; background:var(--brand-rose-light); color:var(--brand-dark); }
+  .poster-name { font-size:14px; font-weight:600; }
+
+  /* Poster Inner Styles */
+  .poster-main-taobao { background:linear-gradient(160deg,#FFF8F60%,#FFFFFF50%,#F5EEED100%); position:relative; }
+  .poster-main-taobao .badge-corner { position:absolute; top:0; left:0; width:60px; height:60px; background:var(--accent-red); color:white; font-size:11px; font-weight:700; display:flex; align-items:flex-start; justify-content:flex-start; padding:8px; line-height:1.2; }
+  .poster-main-taobao .product-area { width:65%; height:55%; background:linear-gradient(135deg,#F0E0E0,#E8D0D0); border-radius:16px; margin-bottom:16px; display:flex; align-items:center; justify-content:center; font-size:40px; color:var(--brand-rose-dark); }
+  .poster-main-taobao .title-main { font-size:20px; font-weight:800; color:var(--brand-dark); letter-spacing:2px; margin-bottom:6px; }
+  .poster-main-taobao .price-row { display:flex; align-items:baseline; gap:8px; }
+  .poster-main-taobao .price-now { font-size:26px; font-weight:900; color:var(--accent-red); }
+  .poster-main-taobao .price-old { font-size:13px; color:#bbb; text-decoration:line-through; }
+  .poster-main-taobao .tag-off { background:var(--accent-red); color:white; padding:2px10px; border-radius:8px; font-size:11px; font-weight:700; vertical-align:middle; margin-left:4px; }
+
+  .poster-xhs { background:linear-gradient(180deg,#2C2C2C0%,#3D353530%,#D4A5A5100%); color:white; position:relative; }
+  .poster-xhs .top-bar { position:absolute; top:16px; left:16px; right:16px; display:flex; justify-content:space-between; align-items:center; }
+  .poster-xhs .brand-label { font-size:11px; opacity:0.8; letter-spacing:3px; }
+  .poster-xhs .xhs-tag { background:rgba(255,255,255,0.15); backdrop-filter:blur(10px); padding:4px12px; border-radius:12px; font-size:10px; }
+  .poster-xhs .big-product { width:68%; height:38%; background:radial-gradient(circleatcenter,rgba(255,255,255,0.08),transparent); border:1px solid rgba(212,165,165,0.3); border-radius:20px; margin:45px auto 16px; display:flex; align-items:center; justify-content:center; font-size:46px; }
+  .poster-xhs .headline { font-size:23px; font-weight:900; text-align:center; line-height:1.3; margin-bottom:10px; }
+  .poster-xhs .subline { text-align:center; font-size:12px; opacity:0.75; margin-bottom:14px; }
+  .poster-xhs .bottom-price { text-align:center; padding:14px; background:rgba(0,0,0,0.25); border-radius:16px; margin:0 16px 16px; }
+  .poster-xhs .price-big { font-size:33px; font-weight:900; color:var(--brand-rose); }
+
+  .poster-atmosphere { background:linear-gradient(135deg,#2C2C2C0%,#4A383850%,#D4A5A5100%); color:white; position:relative; overflow:hidden; }
+  .poster-atmosphere .event-badge { display:inline-block; background:var(--brand-rose); color:var(--brand-dark); padding:6px20px; border-radius:20px; font-size:13px; font-weight:800; letter-spacing:3px; margin-bottom:14px; }
+  .poster-atmosphere .event-title { font-size:32px; font-weight:900; line-height:1.2; margin-bottom:10px; }
+  .poster-atmosphere .event-sub { font-size:14px; opacity:0.85; margin-bottom:20px; }
+  .offer-tags { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; }
+  .offer-tag { background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); padding:8px16px; border-radius:30px; font-size:13px; font-weight:600; }
+
+  .poster-countdown { background:linear-gradient(180deg,#1a0a0a0%,#2C121250%,#8B2020100%); color:white; position:relative; overflow:hidden; }
+  .poster-countdown::before { content:''; position:absolute; top:0; left:0; right:0; height:4px; background:var(--accent-red); }
+  .pulse-ring { width:120px; height:120px; border:3px solid var(--accent-red); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:20px auto 12px; animation:pulse-glow 2s ease-in-out infinite; }
+  @keyframes pulse-glow { 0%,100%{box-shadow:0020pxrgba(231,76,60,0.3),scale(1);} 50%{box-shadow:0040pxrgba(231,76,60,0.6),scale(1.03);} }
+  .countdown-num { font-size:46px; font-weight:900; color:var(--accent-red); }
+  .countdown-unit { font-size:14px; opacity:0.8; }
+  .countdown-text { font-size:18px; font-weight:700; margin-bottom:6px; }
+  .countdown-sub { font-size:12px; opacity:0.6; }
+
+  .poster-coupon { background:linear-gradient(135deg,#FFF5F00%,#FFFFFF50%,#FFE8DD100%); position:relative; }
+  .coupon-body { border:2px dashed var(--brand-rose); border-radius:var(--radius-md); margin:14px; padding:20px 16px; text-align:center; position:relative; }
+  .coupon-type { font-size:12px; color:#999; margin-bottom:6px; }
+  .coupon-value { font-size:42px; font-weight:900; color:var(--accent-red); }
+  .coupon-condition { font-size:13px; color:#666; margin-top:4px; }
+  .coupon-split { position:absolute; right:-20px; top:50%; transform:translateY(-50%); width:40px; height:40px; background:var(--off-white); border-radius:50%; border:2px dashed var(--brand-rose); }
+  .coupon-right { width:28%; height:calc(100% - 28px); background:var(--accent-red); color:white; display:flex; flex-direction:column; align-items:center; justify-content:center; position:absolute; right:14px; top:14px; border-radius:0 var(--radius-sm) var(--radius-sm) 0; }
+  .coupon-btn { font-size:13px; font-weight:700; }
+  .coupon-code { font-size:10px; opacity:0.8; margin-top:4px; }
+
+  /* ===== Full-Size Poster Display ===== */
+  .full-poster-section { background:#1a1a1a; padding:40px 0; }
+  .full-poster-inner { max-width:1400px; margin:0 auto; padding:0 20px; }
+  .full-poster-title { color:white; font-size:20px; font-weight:700; margin-bottom:20px; display:flex; align-items:center; gap:10px; }
+  .full-poster-title .dot { width:8px; height:8px; background:var(--brand-rose); border-radius:50%; }
+  .full-poster-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(360px,1fr)); gap:28px; }
+  .full-poster-frame { background:#222; border-radius:var(--radius-lg); overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,0.4); }
+  .full-poster-frame-title { color:var(--brand-rose); font-size:12px; font-weight:600; padding:10px 16px; background:#111; text-align:center; letter-spacing:1px; }
+
+  /* Full Atmosphere Poster */
+  .fp-atmosphere {
+    width:100%; aspect-ratio:3/4;
+    background:linear-gradient(135deg,#2C2C2C0%,#3D2E2E30%,#6B4A4A60%,#D4A5A5100%);
+    position:relative; overflow:hidden;
+    font-family:"PingFang SC",sans-serif; color:white;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; padding:50px36px;
+  }
+  .fp-atmosphere .bg-glow-1 { position:absolute; top:-120px; right:-120px; width:420px; height:420px; background:radial-gradient(circle,rgba(212,165,165,0.35)0%,transparent70%); border-radius:50%; }
+  .fp-atmosphere .bg-glow-2 { position:absolute; bottom:-80px; left:-80px; width:300px; height:300px; background:radial-gradient(circle,rgba(212,165,165,0.2)0%,transparent70%); border-radius:50%; }
+  .fp-atmosphere .grid-overlay { position:absolute; inset:0; background-image:linear-gradient(rgba(255,255,255,0.02)1px,transparent1px),linear-gradient(90deg,rgba(255,255,255,0.02)1px,transparent1px); background-size:50px50px; }
+  .fp-atmosphere .date-badge { position:absolute; top:36px; right:36px; background:rgba(231,76,60,0.9); color:white; padding:1224px; border-radius:14px; font-size:15px; font-weight:900; text-align:center; line-height:1.4; }
+  .fp-atmosphere .ev-badge { display:inline-block; background:#D4A5A5; color:#2C2C2C; padding:1032px; border-radius:28px; font-size:17px; font-weight:900; letter-spacing:5px; margin-bottom:32px; position:relative; z-index:2; box-shadow:08px28px rgba(212,165,165,0.4); }
+  .fp-atmosphere .ev-title { font-size:64px; font-weight:900; line-height:1.15; margin-bottom:18px; letter-spacing:5px; position:relative; z-index:2; text-shadow:04px28px rgba(0,0,0,0.4); }
+  .fp-atmosphere .ev-title span { color:#D4A5A5; }
+  .fp-atmosphere .ev-sub { font-size:22px; opacity:0.82; text-align:center; margin-bottom:42px; letter-spacing:4px; position:relative; z-index:2; }
+  .fp-atmosphere .offer-tags { display:flex; gap:14px; flex-wrap:wrap; justify-content:center; position:relative; z-index:2; }
+  .fp-atmosphere .otag { background:rgba(255,255,255,0.09); backdrop-filter:blur(8px); border:1px solid rgba(255,255,255,0.17); padding:1224px; border-radius:36px; font-size:19px; font-weight:700; }
+  .fp-atmosphere .slogan-bar { position:absolute; bottom:48px; left:0; right:0; text-align:center; font-size:17px; letter-spacing:8px; opacity:0.45; font-weight:300; }
+  .particle { position:absolute; border-radius:50%; background:rgba(212,165,165,0.3); animation:floatP 6s ease-in-out infinite; }
+  @keyframes floatP { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-18px);} }
+  .p1 { width:8px; height:8px; top:18%; left:8%; animation-delay:0s; } .p2 { width:6px; height:6px; top:58%; left:83%; animation-delay:1.5s; }
+  .p3 { width:10px; height:10px; top:72%; left:12%; animation-delay:3s; } .p4 { width:5px; height:5px; top:32%; right:10%; animation-delay:2s; }
+
+  /* Full Countdown Poster */
+  .fp-countdown {
+    width:100%; aspect-ratio:3/4;
+    background:linear-gradient(180deg,#1a0a0a0%,#2C121235%,#6B151565%,#8B2020100%);
+    position:relative; overflow:hidden;
+    font-family:"PingFang SC",sans-serif; color:white;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; padding:40px 30px;
+  }
+  .fp-countdown .danger-bar { position:absolute; top:0; left:0; right:0; height:5px; background:linear-gradient(90deg,#E74C3C,#FF6B6B,#E74C3C); animation:pulseBar2s ease-in-out infinite; }
+  @keyframes pulseBar { 0%,100%{opacity:1;} 50%{opacity:0.55;} }
+  .fp-countdown .header-text { position:absolute; top:40px; font-size:15px; letter-spacing:5px; opacity:0.55; font-weight:600; }
+  .fp-countdown .pr { width:320px; height:320px; border:4px solid #E74C3C; border-radius:50%; display:flex; align-items:center; justify-content:center; animation:pulseGlow 2s ease-in-out infinite; box-shadow:0050px rgba(231,76,60,0.22),inset 0050px rgba(231,76,60,0.05); position:relative; }
+  @keyframes pulseGlow { 0%,100%{box-shadow:0040px rgba(231,76,60,0.26),inset 0040px rgba(231,76,60,0.05);transform:scale(1);} 50%{box-shadow:0070px rgba(231,76,60,0.5),inset 0060px rgba(231,76,60,0.1);transform:scale(1.02);} }
+  .fp-countdown .cn-num { font-size:120px; font-weight:900; color:#E74C3C; text-shadow:0036px rgba(231,76,60,0.5); line-height:1; }
+  .fp-countdown .cn-unit { font-size:28px; opacity:0.75; letter-spacing:4px; }
+  .fp-countdown .cd-text { font-size:34px; font-weight:900; margin-top:32px; letter-spacing:4px; }
+  .fp-countdown .cd-sub { font-size:17px; opacity:0.52; text-align:center; margin-top:14px; line-height:1.6; max-width:520px; }
+  .fp-countdown .urgent-row { margin-top:40px; display:flex; gap:16px; }
+  .fp-countdown .ui-item { background:rgba(231,76,60,0.12); border:1px solid rgba(231,76,60,0.25); padding:1224px; border-radius:16px; font-size:16px; font-weight:700; }
+  .fp-countdown .cta-u { position:absolute; bottom:64px; background:#E74C3C; color:white; padding:1848px; border-radius:40px; font-size:23px; font-weight:900; letter-spacing:3px; box-shadow:08px36px rgba(231,76,60,0.5); animation:ctaP 2s ease-in-out infinite; }
+  @keyframes ctaP { 0%,100%{transform:scale(1);} 50%{transform:scale(1.04);} }
+  .corner-stripe { position:absolute; width:70px; height:70px; opacity:0.06; }
+  .cs-tl { top:16px; left:16px; background:repeating-linear-gradient(45deg,#E74C3C,#E74C3C 8px,transparent8px,transparent16px); }
+  .cs-br { bottom:16px; right:16px; background:repeating-linear-gradient(-45deg,#E74C3C,#E74C3C 8px,transparent8px,transparent16px); }
+
+  /* Full Coupon Poster */
+  .fp-coupon {
+    width:100%; aspect-ratio:1/1;
+    background:linear-gradient(135deg,#FFF5F00%,#FFFFFF50%,#FFE8DD100%);
+    position:relative; overflow:hidden;
+    font-family:"PingFang SC",sans-serif; display:flex; flex-direction:column; padding:34px;
+  }
+  .fp-coupon .bpattern { position:absolute; inset:0; background-image:radial-gradient(circle,rgba(212,165,165,0.07)1px,transparent1px); background-size:22px22px; }
+  .fp-coupon .ribbon { position:absolute; top:-3px; left:50%; transform:translateX(-50%)rotate(-2deg); background:#E74C3C; color:white; padding:6px36px; font-size:12px; font-weight:700; letter-spacing:2px; z-index:5; }
+  .fp-coupon .chdr { text-align:center; position:relative; z-index:2; margin-bottom:18px; margin-top:16px; }
+  .fp-coupon .chdr-icon { font-size:36px; }
+  .fp-coupon .chdr-title { font-size:28px; font-weight:900; color:#2C2C2C; letter-spacing:4px; margin-top:6px; }
+  .fp-coupon .chdr-sub { font-size:13px; color:#999; letter-spacing:2px; margin-top:3px; }
+  .fp-coupon .cmain { flex:1; display:flex; position:relative; z-index:2; margin:16px 0; }
+  .fp-coupon .cleft { flex:1; border:3px dashed #D4A5A5; border-right:none; border-radius:22px 0 0 22px; display:flex; flex-direction:column; align-items:center; justify-content:center; background:white; position:relative; }
+  .fp-coupon .ctl-label { font-size:14px; color:#999; font-weight:600; letter-spacing:3px; margin-bottom:6px; }
+  .fp-coupon .currency-symbol { font-size:36px; font-weight:900; color:#E74C3C; vertical-align:top; margin-right:3px; }
+  .fp-coupon .cv-num { font-size:96px; font-weight:900; color:#E74C3C; line-height:1; }
+  .fp-coupon .cc-cond { font-size:18px; color:#666; margin-top:10px; font-weight:600; }
+  .fp-coupon .cc-scope { font-size:12px; color:#aaa; margin-top:5px; }
+  .fp-coupon .cut-circle { position:absolute; transform:translateY(-50%); width:48px; height:48px; background:#FFE8DD; border-radius:50%; border:3px dashed #D4A5A5; }
+  .fp-coupon .cutL { left:-24px; top:50%; } .fp-coupon .cutR { right:-24px; top:50%; }
+  .fp-coupon .cright { width:200px; background:linear-gradient(180deg,#E74C3C,#C0392B); border-radius:0 22px 22px 0; display:flex; flex-direction:column; align-items:center; justify-content:center; color:white; position:relative; }
+  .fp-coupon .cta-text { font-size:25px; font-weight:900; letter-spacing:3px; }
+  .fp-coupon .code-text { font-size:12px; opacity:0.8; margin-top:7px; font-family:'SF Mono',monospace; letter-spacing:2px; }
+  .fp-coupon .qr-hint { font-size:10px; opacity:0.45; margin-top:14px; }
+  .fp-coupon .cftr { position:relative; z-index:2; text-align:center; padding:14px; background:rgba(212,165,165,0.1); border-radius:14px; }
+  .fp-coupon .fr-rule { font-size:12px; color:#888; line-height:1.8; }
+  .fp-coupon .fr-hl { color:#E74C3C; font-weight:700; }
+  .fp-coupon .logo-area { position:absolute; bottom:16px; right:20px; font-size:12px; color:#D4A5A5; opacity:0.45; font-weight:600; }
+
+  /* ===== Pipeline ===== */
+  .pipeline-container { background:white; border-radius:var(--radius-lg); padding:36px; box-shadow:var(--shadow-soft); }
+  .pipeline-steps { display:flex; align-items:center; gap:12px; overflow-x:auto; padding:20px 0; }
+  .pipe-step { flex-shrink:0; width:185px; text-align:center; }
+  .pipe-thumb { width:164px; height:164px; border-radius:var(--radius-sm); margin:0 auto 10px; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:600; color:white; position:relative; overflow:hidden; }
+  .pipe-arrow { font-size:24px; color:var(--brand-rose); flex-shrink:0; }
+  .pipe-label { font-size:12px; color:#666; font-weight:600; }
+  .pipe-desc { font-size:11px; color:#aaa; }
+
+  .platform-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-top:28px; }
+  @media(max-width:900px){.platform-grid{grid-template-columns:repeat(2,1fr);} }
+  .platform-card { background:white; border-radius:var(--radius-md); overflow:hidden; box-shadow:var(--shadow-soft); }
+  .platform-header { padding:1216px; font-size:13px; font-weight:700; color:white; text-align:center; }
+  .platform-preview { aspect-ratio:1/1; background:#f8f8f8; display:flex; align-items:center; justify-content:center; font-size:12px; color:#999; }
+  .platform-info { padding:1014px; font-size:12px; color:#666; border-top:1px solid #f0f0f0; }
+  .platform-size { font-family:'SF Mono',monospace; color:#999; }
+
+  /* ===== Video Script Cards ===== */
+  .video-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(360px,1fr)); gap:20px; margin-top:24px; }
+  .video-card { background:white; border-radius:var(--radius-md); overflow:hidden; box-shadow:var(--shadow-soft); border-left:4px solid var(--brand-rose); }
+  .video-header { padding:1620px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #f0f0f0; }
+  .video-type { font-weight:700; font-size:15px; }
+  .video-version { font-size:11px; padding:310px; border-radius:10px; font-weight:700; }
+  .ver-a { background:#E8F5E9; color:#2E7D32; } .ver-b { background:#FFF3E0; color:#E65100; }
+  .video-body { padding:1820px; }
+  .video-duration { font-size:12px; color:var(--brand-rose); font-weight:700; margin-bottom:10px; }
+  .script-line { font-size:13px; padding:8px 0; border-bottom:1px dotted #eee; display:flex; gap:10px; }
+  .script-time { color:#ccc; font-size:12px; flex-shrink:0; width:45px; }
+  .script-text { color:#555; }
+  .script-hook { background:#FFF0F0; color:var(--accent-red); padding:2px6px; border-radius:4px; font-weight:700; }
+
+  /* ===== Spec Tables ===== */
+  .spec-table { width:100%; border-collapse:collapse; background:white; border-radius:var(--radius-md); overflow:hidden; box-shadow:var(--shadow-soft); margin-top:18px; }
+  .spec-table th { background:var(--brand-dark); color:white; padding:1418px; text-align:left; font-size:13px; }
+  .spec-table td { padding:1218px; font-size:13px; border-bottom:1px solid #f0f0f0; }
+  .spec-table code { background:#f5f5f5; padding:2px8px; border-radius:4px; font-size:12px; font-family:'SF Mono',monospace; color:var(--accent-red); }
+  .spec-h3 { font-size:19px; font-weight:800; margin:28px 0 12px; color:var(--brand-dark); }
+  .spec-h3::before { content:'▸'; color:var(--brand-rose); margin-right:8px; }
+
+  /* ===== Footer ===== */
+  .footer { text-align:center; padding:50px 20px; color:#aaa; font-size:13px; border-top:1px solid #eee; margin-top:40px; }
+
+  @media(max-width:600px){
+    .hero h1{font-size:32px;} .hero-stats{flex-wrap:wrap;gap:20px;}
+    .section-title{font-size:22px;}
+    .full-poster-grid{grid-template-columns:1fr;}
+    .video-grid{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ========== Sticky Navigation ========== -->
+<nav class="nav" id="nav">
+  <a href="#overview">📊 总览</a>
+  <a href="#brand">🎨 品牌系统</a>
+  <a href="#posters">🖼 主推海报</a>
+  <a href="#fullposters">📐 全尺寸海报</a>
+  <a href="#pipeline">⚙️ 商品图流水线</a>
+  <a href="#videos">🎬 视频脚本</a>
+  <a href="#naming">📁 命名规范</a>
+</nav>
+
+<!-- ========== HERO ========== -->
+<div class="hero" id="overview">
+  <div class="hero-badge">DOUBLE 11 · 2026</div>
+  <h1>XX肽颜 · 双11大促</h1>
+  <p class="slogan">「以肽养肤，科学抗衰」</p>
+  <div class="hero-stats">
+    <div class="stat-item"><div class="stat-num">200+</div><div class="stat-label">海报文件</div></div>
+    <div class="stat-item"><div class="stat-num">425</div><div class="stat-label">商品图成品</div></div>
+    <div class="stat-item"><div class="stat-num">30</div><div class="stat-label">种草视频</div></div>
+    <div class="stat-item"><div class="stat-num">4</div><div class="stat-label">平台尺寸</div></div>
+  </div>
+</div>
+
+<!-- ========== 1. 品牌设计系统 ========== -->
+<div class="section" id="brand">
+  <h2 class="section-title">品牌设计系统</h2>
+  <p class="section-desc">品牌主色、辅助色与字体规范 — 全部物料统一视觉语言</p>
+  <div class="palette-grid">
+    <div class="palette-item">
+      <div class="palette-swatch" style="background:#D4A5A5"></div>
+      <div class="palette-info"><div class="palette-name">玫瑰金 Primary</div><div class="palette-hex">#D4A5A5</div><div class="palette-use">主标题、按钮、价格、强调元素</div></div>
+    </div>
+    <div class="palette-item">
+      <div class="palette-swatch" style="background:#2C2C2C"></div>
+      <div class="palette-info"><div class="palette-name">深灰 Dark</div><div class="palette-hex">#2C2C2C</div><div class="palette-use">正文、背景、高端氛围区</div></div>
+    </div>
+    <div class="palette-item">
+      <div class="palette-swatch" style="background:#E8CACA"></div>
+      <div class="palette-info"><div class="palette-name">玫瑰金浅 Light</div><div class="palette-hex">#E8CACA</div><div class="palette-use">背景渐变、标签底色、次要信息</div></div>
+    </div>
+    <div class="palette-item">
+      <div class="palette-swatch" style="background:#E74C3C"></div>
+      <div class="palette-info"><div class="palette-name">促销红 Accent</div><div class="palette-hex">#E74C3C</div><div class="palette-use">倒计时、折扣标签、紧迫感提示</div></div>
+    </div>
+  </div>
+
+  <!-- Font Spec -->
+  <div class="spec-h3" style="margin-top:36px;">字体规范</div>
+  <table class="spec-table">
+    <thead><tr><th>用途</th><th>字体</th><th>字重</th><th>示例</th></tr></thead>
+    <tbody>
+      <tr><td>主标题 / 价格数字</td><td>方正兰亭黑</td><td>Heavy / Black</td><td style="font-weight:900;font-size:18px;">全年最低价 ¥168</td></tr>
+      <tr><td>正文 / 描述文字</td><td>思源黑体</td><td>Regular / Medium</td><td style="font-size:14px;">六胜肽紧致精华液，深层抗衰配方</td></tr>
+      <tr><td>装饰性标签</td><td>思源宋体</td><td>SemiBold</td><td style="font-family:serif;font-size:14px;">以 肽 养 肤</td></tr>
+      <tr><td>价格划线原价</td><td>Arial</td><td>Regular</td><td style="text-decoration:line-through;color:#bbb;">¥299</td></tr>
+      <tr><td>文件命名代码</td><td>SF Mono</td><td>Regular</td><td style="font-family:monospace;font-size:13px;color:#E74C3C;">SKU_01_淘宝_800x800.jpg</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ========== 2. 主推品海报 Demo ========== -->
+<div class="section" id="posters">
+  <h2 class="section-title">主推品海报（Demo × 2款 × 2尺寸）</h2>
+  <p class="section-desc">5款明星单品各4尺寸 → Demo 展示 SKU_01 紧致精华液 + SKU_02 修护面霜</p>
+  <div class="poster-grid">
+
+    <!-- SKU_01 Taobao -->
+    <div class="poster-card">
+      <div class="poster-preview ratio-taobao"><div class="poster-main-taobao">
+        <div class="badge-corner">双11<br>特惠</div>
+        <div class="product-area">🧪</div>
+        <div class="title-main">六胜肽紧致精华液</div>
+        <div class="price-row"><span class="price-now">¥168</span><span class="price-old">¥299</span><span class="tag-off">-44%</span></div>
+      </div></div>
+      <div class="poster-meta"><span class="poster-tag">淘宝 800×800</span><span class="poster-name">SKU_01_主推_淘宝</span></div>
+    </div>
+
+    <!-- SKU_01 XHS -->
+    <div class="poster-card">
+      <div class="poster-preview ratio-xhs"><div class="poster-xhs">
+        <div class="top-bar"><span class="brand-label">XX肽颜®</span><span class="xhs-tag">#双11必买</span></div>
+        <div class="big-product">🧪</div>
+        <div class="headline">熬夜垮脸？<br>一抹回弹紧致</div>
+        <div class="subline">六胜肽·玻尿酸·烟酰胺 三重抗衰配方</div>
+        <div class="bottom-price"><div style="font-size:13px;opacity:0.7;margin-bottom:4px;">双11到手价</div><div class="price-big">¥168 <span style="font-size:16px;text-decoration:line-through;opacity:0.5;color:white;">¥299</span></div></div>
+      </div></div>
+      <div class="poster-meta"><span class="poster-tag">小红书 1080×1440</span><span class="poster-name">SKU_01_主推_小红书</span></div>
+    </div>
+
+    <!-- SKU_02 Taobao -->
+    <div class="poster-card">
+      <div class="poster-preview ratio-taobao"><div class="poster-main-taobao">
+        <div class="badge-corner">限量<br>500件</div>
+        <div class="product-area">✨</div>
+        <div class="title-main">胶原蛋白修护面霜</div>
+        <div class="price-row"><span class="price-now">¥198</span><span class="price-old">¥358</span><span class="tag-off">-45%</span></div>
+      </div></div>
+      <div class="poster-meta"><span class="poster-tag">淘宝 800×800</span><span class="poster-name">SKU_02_主推_淘宝</span></div>
+    </div>
+
+    <!-- SKU_02 Douyin -->
+    <div class="poster-card">
+      <div class="poster-preview ratio-douyin"><div class="poster-xhs" style="background:linear-gradient(180deg,#1a1a1a 0%,#2d2222 40%,#D4A5A5 100%);">
+        <div class="top-bar"><span class="brand-label">XX肽颜®</span><span class="xhs-tag">🔥爆款</span></div>
+        <div class="big-product" style="font-size:56px;">✨</div>
+        <div class="headline" style="margin-top:28px;">干皮救星！<br>这款面霜真的绝了</div>
+        <div class="subline">胶原蛋白+神经酰胺 72小时长效保湿</div>
+        <div class="bottom-price"><div style="font-size:13px;opacity:0.7;margin-bottom:4px;">双11限时价 ⏰</div><div class="price-big">¥198 <span style="font-size:16px;text-decoration:line-through;opacity:0.5;color:white;">¥358</span></div></div>
+      </div></div>
+      <div class="poster-meta"><span class="poster-tag">抖音 1080×1920</span><span class="poster-name">SKU_02_主推_抖音</span></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ========== 3. 全尺寸海报展示区 ========== -->
+<div class="full-poster-section" id="fullposters">
+  <div class="full-poster-inner">
+    <div class="full-poster-title"><div class="dot"></div>全尺寸海报预览 — 可直接截图用于生产</div>
+
+    <div class="full-poster-grid">
+
+      <!-- Full Atmosphere Poster -->
+      <div class="full-poster-frame">
+        <div class="full-poster-frame-title">氛围海报 · 双11总动员 | 小红书 1080×1440</div>
+        <div class="fp-atmosphere">
+          <div class="bg-glow-1"></div><div class="bg-glow-2"></div><div class="grid-overlay"></div>
+          <div class="particle p1"></div><div class="particle p2"></div><div class="particle p3"></div><div class="particle p4"></div>
+          <div class="date-badge">11.01<br>- 11.11</div>
+          <div class="ev-badge">🔥 DOUBLE 11 🔥</div>
+          <div class="ev-title">全年最低价<br><span>限时抢购</span></div>
+          <div class="ev-sub">以 肽 养 肤 · 科 学 抗 衰 · 尊 享 礼 遇</div>
+          <div class="offer-tags">
+            <span class="otag">💰 5 折 起</span>
+            <span class="otag">🎁 满 300 减 50</span>
+            <span class="otag">💎 满 500 减 100</span>
+            <span class="otag">🚚 全 场 包 邮</span>
+            <span class="otag">⏰ 限 时 限 量</span>
+            <span class="otag">🎀 下 单 送 正 装</span>
+          </div>
+          <div class="slogan-bar">「 以 肽 养 肤 ， 科 学 抗 衰 」</div>
+        </div>
+      </div>
+
+      <!-- Full Countdown Poster -->
+      <div class="full-poster-frame">
+        <div class="full-poster-frame-title">倒计时海报 · 距结束3天 | 通用 1080×1440</div>
+        <div class="fp-countdown">
+          <div class="danger-bar"></div>
+          <div class="corner-stripe cs-tl"></div><div class="corner-stripe cs-br"></div>
+          <div class="header-text">距 双 11 结 束 还 剩</div>
+          <div class="pr"><div><span class="cn-num">03</span><br><span class="cn-unit">天</span></div></div>
+          <div class="cd-text">错过再等一年！</div>
+          <div class="cd-sub">全场5折起 · 满500减100 · 赠品有限先到先得 · 库存告急</div>
+          <div class="urgent-row">
+            <span class="ui-item">⚡ 5折起</span>
+            <span class="ui-item">🔥 减100</span>
+            <span class="ui-item">🎁 送正装</span>
+          </div>
+          <div class="cta-u">立即抢购 ⏰</div>
+        </div>
+      </div>
+
+      <!-- Full Coupon Poster -->
+      <div class="full-poster-frame">
+        <div class="full-poster-frame-title">优惠券海报 · 满500减100 | 淘宝 800×800</div>
+        <div class="fp-coupon">
+          <div class="bpattern"></div>
+          <div class="ribbon">🔥 双11限定 · 仅限11天 🔥</div>
+          <div class="chdr">
+            <div class="chdr-icon">🎫</div>
+            <div class="chdr-title">XX肽颜 专属优惠券</div>
+            <div class="chdr-sub">DOUBLE 11 EXCLUSIVE COUPON</div>
+          </div>
+          <div class="cmain">
+            <div class="cleft">
+              <div class="cut-circle cutL"></div><div class="cut-circle cutR"></div>
+              <div class="ctl-label">满 减 券</div>
+              <div><span class="currency-symbol">¥</span><span class="cv-num">100</span></div>
+              <div class="cc-cond">满 ¥500 可用</div>
+              <div class="cc-scope">全场通用 · 可叠加店铺满减活动</div>
+            </div>
+            <div class="cright">
+              <div class="cta-text">立即<br>领取</div>
+              <div class="code-text">CODE: D11VIP</div>
+              <div class="qr-hint">扫码或点击领取 →</div>
+            </div>
+          </div>
+          <div class="cftr">
+            <div class="fr-rule">有效期：<span class="fr-hl">2026.11.01 - 2026.11.11</span> &nbsp;|&nbsp; 每人限领1张 &nbsp;|&nbsp; 不可与其他优惠券叠加使用（可与跨店满减叠加）</div>
+          </div>
+          <div class="logo-area">XX肽颜® LOGO</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ========== 4. 商品图处理流水线 ========== -->
+<div class="section" id="pipeline">
+  <h2 class="section-title">商品图处理流水线</h2>
+  <p class="section-desc">100张原图 → 4个处理步骤 → 425个成品文件，覆盖4大平台</p>
+
+  <div class="pipeline-container">
+    <div style="font-weight:700;margin-bottom:18px;font-size:16px;">处理流程：增强清晰度 → AI去背景 → 统一白底 → Logo水印</div>
+    <div class="pipeline-steps">
+      <div class="pipe-step">
+        <div class="pipe-thumb" style="background:#666;">原始图片<br><small style="font-size:10px;opacity:0.7;">JPG/RAW</small></div>
+        <div class="pipe-label">Step 1 原始素材</div>
+        <div class="pipe-desc">100张产品实拍图</div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step">
+        <div class="pipe-thumb" style="background:linear-gradient(135deg,#888,#AAA);">AI增强<br><small style="font-size:10px;opacity:0.7;">超分辨率</small></div>
+        <div class="pipe-label">Step 2 清晰度增强</div>
+        <div class="pipe-desc">2×超分锐化去噪</div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step">
+        <div class="pipe-thumb" style="background:linear-gradient(135deg,#ddd,#fff);color:#333;border:2px dashed #ccc;">透明底<br><small style="font-size:10px;opacity:0.7;">PNG Alpha</small></div>
+        <div class="pipe-label">Step 3 AI去背景</div>
+        <div class="pipe-desc">Rembg自动抠图</div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step">
+        <div class="pipe-thumb" style="background:#fff;color:#333;border:1px solid #eee;">白底成品<br><small style="font-size:10px;opacity:0.7;">1200×1200</small></div>
+        <div class="pipe-label">Step 4 白底标准化</div>
+        <div class="pipe-desc">统一尺寸+Logo水印</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Platform Output Grid -->
+  <div class="platform-grid" style="margin-top:32px;">
+    <div class="platform-card">
+      <div class="platform-header" style="background:#FF6A00;">淘宝天猫</div>
+      <div class="platform-preview" style="background:linear-gradient(135deg,#FFF5F0,#fff);"><div style="text-align:center;"><div style="font-size:36px;margin-bottom:8px;">🧪</div><div style="font-size:11px;color:#D4A5A5;">白底商品图</div></div></div>
+      <div class="platform-info"><strong>800×800 px</strong> 白底 JPG<br><span class="platform-size">1:1 正方形</span></div>
+    </div>
+    <div class="platform-card">
+      <div class="platform-header" style="background:#FE2C55;">小红书</div>
+      <div class="platform-preview" style="background:linear-gradient(135deg,#2C2C2C,#D4A5A5);"><div style="text-align:center;color:white;"><div style="font-size:32px;margin-bottom:8px;">✨</div><div style="font-size:11px;opacity:0.7;">氛围底+标签</div></div></div>
+      <div class="platform-info"><strong>1080×1440 px</strong> PNG<br><span class="platform-size">3:4 竖版</span></div>
+    </div>
+    <div class="platform-card">
+      <div class="platform-header" style="background:#000000;">抖音</div>
+      <div class="platform-preview" style="background:linear-gradient(180deg,#111,#333);"><div style="text-align:center;color:white;"><div style="font-size:32px;margin-bottom:8px;">📱</div><div style="font-size:11px;opacity:0.7;">竖版短视频封面</div></div></div>
+      <div class="platform-info"><strong>1080×1920 px</strong> JPG<br><span class="platform-size">9:16 手机竖版</span></div>
+    </div>
+    <div class="platform-card">
+      <div class="platform-header" style="background:#07C160;">公众号</div>
+      <div class="platform-preview" style="background:linear-gradient(90deg,#2C2C2C,#D4A5A5);"><div style="text-align:center;color:white;"><div style="font-size:24px;margin-bottom:8px;">横幅Banner</div><div style="font-size:11px;opacity:0.7;">文章头图</div></div></div>
+      <div class="platform-info"><strong>900×383 px</strong> JPG<br><span class="platform-size">21:9 宽幅</span></div>
+    </div>
+  </div>
+
+  <!-- Pipeline Detailed Spec -->
+  <div class="spec-h3" style="margin-top:40px;">各步骤详细规格</div>
+  <table class="spec-table">
+    <thead><tr><th>步骤</th><th>工具</th><th>参数</th><th>输出</th><th>QC标准</th></tr></thead>
+    <tbody>
+      <tr><td>Step1 增强</td><td>Real-ESRGAN / Photoshop AI</td><td>2倍放大，去噪中等</td><td>_enhanced.jpg</td><td>放大200%无模糊</td></tr>
+      <tr><td>Step2 抠图</td><td>Rembg / Remove.ai</td><td>边缘羽化1px</td><td>_nobg.png (透明底)</td><td>边缘无锯齿无残留色</td></tr>
+      <tr><td>Step3 白底</td><td>Photoshop / Python PIL</td><td>1200×1200，产品占比70%</td><td>白底 JPG Q95</td><td>纯白#FFF，居中，轻投影</td></tr>
+      <tr><td>Step4 水印</td><td>ImageMagick / PS Action</td><td>右下角距边24px，60%透明度</td><td>最终成品文件</td><td>Logo高度≤画布6%</td></tr>
+    </tbody>
+  </table>
+
+  <!-- Output Volume Table -->
+  <div class="spec-h3">产出量统计</div>
+  <table class="spec-table">
+    <thead><tr><th>分类</th><th>数量</th><th>白底版本(×4平台)</th><th>场景合成(×4平台)</th><th>合计</th></tr></thead>
+    <tbody>
+      <tr><td>普通款 SKU</td><td>95 款</td><td>95 × 4 = 380</td><td>-</td><td>380</td></tr>
+      <tr><td>明星款 SKU_01~05</td><td>5 款</td><td>5 × 4 = 20</td><td>5 × 4 = 20</td><td>40</td></tr>
+      <tr><td style="font-weight:900;background:#FFF5F0;"><b>总计</b></td><td style="font-weight:900;background:#FFF5F0;">100 款</td><td style="font-weight:900;background:#FFF5F0;">400</td><td style="font-weight:900;background:#FFF5F0;">20 + 场景合成额外 5 = 25</td><td style="font-weight:900;color:#E74C3C;background:#FFF5F0;">425 个成品文件</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ========== 5. 种草视频脚本 Demo ========== -->
+<div class="section" id="videos">
+  <h2 class="section-title">种草视频脚本 Demo（AB测试版本）</h2>
+  <p class="section-desc">Humanizer设置：口语化中等偏高 | 小红书+抖音双平台风 | 25岁都市白领真诚分享人设 | 每组投放7天后取最优版本加大投放比例</p>
+
+  <!-- Tech Specs Summary -->
+  <div style="background:white;border-radius:var(--radius-md);padding:2024px;box-shadow:var(--shadow-soft);margin-bottom:24px;display:flex;gap:24px;flex-wrap:wrap;">
+    <div style="flex:1;min-width:200px;"><div style="font-size:12px;color:#999;margin-bottom:4px;">人设定位</div><div style="font-weight:700;">25岁都市白领 / 真诚分享</div></div>
+    <div style="flex:1;min-width:200px;"><div style="font-size:12px;color:#999;margin-bottom:4px;">口语化程度</div><div style="font-weight:700;">中等偏高（自然聊天风）</div></div>
+    <div style="flex:1;min-width:200px;"><div style="font-size:12px;color:#99;margin-bottom:4px;">目标平台</div><div style="font-weight:700;">小红书 + 抖音 双平台适配</div></div>
+    <div style="flex:1;min-width:200px;"><div style="font-size:12px;color:#999;margin-bottom:4px;">AB测试周期</div><div style="font-weight:700;">同步投放 7 天后数据对比</div></div>
+  </div>
+
+  <div class="video-grid">
+
+    <!-- === 1A: 单品种草 A === -->
+    <div class="video-card">
+      <div class="video-header"><span class="video-type">① 单品种草 · 六胜肽紧致精华液</span><span class="video-version ver-a">版本A · 标准种草 30s</span></div>
+      <div class="video-body">
+        <div class="video-duration">⏱ 30秒 | BGM：轻松Vlog风（温馨治愈）</div>
+        <div class="script-line"><span class="script-time">0-3s</span><span class="script-text">姐妹们！今天给你们按头安利这个精华</span></div>
+        <div class="script-line"><span class="script-time">3-8s</span><span class="script-text">(质地特写) 看这个质地，水润到不行，上脸嗖嗖吸收～</span></div>
+        <div class="script-line"><span class="script-time">8-15s</span><span class="script-text">核心成分是<span class="script-hook">六胜肽</span>，就是那种能直接作用于真皮层的抗衰成分</span></div>
+        <div class="script-line"><span class="script-time">15-22s</span><span class="script-text">我用了两周，法令纹真的淡了！不是心理作用！</span></div>
+        <div class="script-line"><span class="script-time">22-27s</span><span class="script-text">双11只要168块，平时299啊家人们！</span></div>
+        <div class="script-line"><span class="script-time">27-30s</span><span class="script-text">(微笑收尾) 链接在左下角，冲就完了！</span></div>
+      </div>
+    </div>
+
+    <!-- === 1B: 单品种草 B === -->
+    <div class="video-card">
+      <div class="video-header"><span class="video-type">① 单品种草 · 六胜肽紧致精华液</span><span class="video-version ver-b">版本B · 高能短版 15s</span></div>
+      <div class="video-body">
+        <div class="video-duration">⏱ 15秒 | BGM：卡点节奏感强（悬疑→燃）</div>
+        <div class="script-line"><span class="script-time">0-2s</span><span class="script-text"><span class="script-hook">【钩子】</span>"25岁以后脸就开始塌？"（怼脸拍细纹）</span></div>
+        <div class="script-line"><span class="script-time">2-6s</span><span class="script-text">(快剪) 这个精华！六胜肽！直接给你弹回去！（质地+上脸）</span></div>
+        <div class="script-line"><span class="script-time">6-11s</span><span class="script-text">双11 💰168！半价不到！！手慢无！</span></div>
+        <div class="script-line"><span class="script-time">11-15s</span><span class="script-text">(CTA画面) 左下角抢！这波不冲真亏！</span></div>
+      </div>
+    </div>
+
+    <!-- === 2A: 活动动员 A === -->
+    <div class="video-card">
+      <div class="video-header"><span class="video-type">② 活动总动员 · 双11全场利益点轰炸</span><span class="video-version ver-a">版本A · 标准种草 30s</span></div>
+      <div class="video-body">
+        <div class="video-duration">⏱ 30秒 | BGM：轻松Vlog风</div>
+        <div class="script-line"><span class="script-time">0-5s</span><span class="script-text">XX肽颜双11攻略来了！今年真的杀疯了！</span></div>
+        <div class="script-line"><span class="script-time">5-12s</span><span class="script-text">全场<span class="script-hook">5折起</span>！满300再减50，满500减100！还能叠加！</span></div>
+        <div class="script-line"><span class="script-time">12-20s</span><span class="script-text">下单就送同款小样，买两件送正装量旅行装！</span></div>
+        <div class="script-line"><span class="script-time">20-26s</span><span class="script-text">算下来相当于花一份钱拿三份量，四舍五入不要钱了😂</span></div>
+        <div class="script-line"><span class="script-time">26-30s</span><span class="script-text">攻略图存好了，11号零点准时冲！</span></div>
+      </div>
+    </div>
+
+    <!-- === 2B: 活动动员 B === -->
+    <div class="video-card">
+      <div class="video-header"><span class="video-type">② 活动总动员 · 双11全场利益点轰炸</span><span class="video-version ver-b">版本B · 高能短版 15s</span></div>
+      <div class="video-body">
+        <div class="video-duration">⏱ 15秒 | BGM：卡点节奏感强</div>
+        <div class="script-line"><span class="script-time">0-2s</span><span class="script-text"><span class="script-hook">【钩子】</span>"别买了！这家双11在送钱！"（震惊表情）</span></div>
+        <div class="script-line"><span class="script-time">2-7s</span><span class="script-text">(快切数字跳动) 5折！减100！送正装！算下来3折！！</span></div>
+        <div class="script-line"><span class="script-time">7-11s</span><span class="script-text">全年就这一次！库存有限！</span></div>
+        <div class="script-line"><span class="script-time">11-15s</span><span class="script-text">链接置顶了！现在就去加购物车！！</span></div>
+      </div>
+    </div>
+
+    <!-- === 3A: 凑单攻略 A === -->
+    <div class="video-card">
+      <div class="video-header"><span class="video-type">③ 凑单攻略 · 如何组合下单最划算</span><span class="video-version ver-a">版本A · 标准种草 30s</span></div>
+      <div class="video-body">
+        <div class="video-duration">⏱ 30秒 | BGM：轻松Vlog风</div>
+        <div class="script-line"><span class="script-time">0-6s</span><span class="script-text">想买XX肽颜又想薅到最大羊毛？听我说！</span></div>
+        <div class="script-line"><span class="script-time">6-14s</span><span class="script-text">最优组合：<span class="script-hook">精华+面霜=366</span>，直接满300减50门槛！</span></div>
+        <div class="script-line"><span class="script-time">14-21s</span><span class="script-text">再加一个眼霜刚好过500，再减100！到手才420三件套！</span></div>
+        <div class="script-line"><span class="script-time">21-27s</span><span class="script-text">比单买便宜了150多！省下的钱够你再买支口红了哈哈</span></div>
+        <div class="script-line"><span class="script-time">27-30s</span><span class="script-text">组合已截图，照着加就行！</span></div>
+      </div>
+    </div>
+
+    <!-- === 3B: 凑单攻略 B === -->
+    <div class="video-card">
+      <div class="video-header"><span class="video-type">③ 凑单攻略 · 如何组合下单最划算</span><span class="video-version ver-b">版本B · 高能短版 15s</span></div>
+      <div class="video-body">
+        <div class="video-duration">⏱ 15秒 | BGM：卡点节奏感强</div>
+        <div class="script-line"><span class="script-time">0-2s</span><span class="script-text"><span class="script-hook">【钩子】</span>"99%的人买XX肽颜都多花了钱！"（认真脸）</span></div>
+        <div class="script-line"><span class="script-time">2-8s</span><span class="script-text">(计算器画面敲击) 这么买！精华面霜眼霜一套420！立省150！</span></div>
+        <div class="script-line"><span class="script-time">8-12s</span><span class="script-text">公式背好了：两件过三百减五十，三件过五百再减一百</span></div>
+        <div class="script-line"><span class="script-time">12-15s</span><span class="script-text">截图保存！结账时对照着来！</span></div>
+      </div>
+    </div>
+
+    <!-- === 4A: 痛点唤醒 A === -->
+    <div class="video-card">
+      <div class="video-header"><span class="video-type">④ 痛点唤醒 · 细纹/暗沉/松弛场景切入</span><span class="video-version ver-a">版本A · 标准种草 30s</span></div>
+      <div class="video-body">
+        <div class="video-duration">⏱ 30秒 | BGM：前段低沉→后段转暖</div>
+        <div class="script-line"><span class="script-time">0-6s</span><span class="script-text">(素颜怼脸) 坦白说，最近照镜子真的有点焦虑...</span></div>
+        <div class="script-line"><span class="script-time">6-12s</span><span class="script-text">笑起来眼角的纹、下午暗沉的脸、还有那个...下垂的轮廓线 😢</span></div>
+        <div class="script-line"><span class="script-time">12-19s</span><span class="script-text">但是！这一个月我在用的这套肽颜组合——<span class="script-hook">真的是救命稻草</span></div></div>
+        <div class="script-line"><span class="script-time">19-26s</span><span class="script-text">(使用前后对比) 你们看这个变化，不是我吹！皮肤真的有"撑起来"的感觉</span></div>
+        <div class="script-line"><span class="script-time">26-30s</span><span class="script-text">抗衰真的要趁早，双11就是最好的开始时机</span></div>
+      </div>
+    </div>
+
+    <!-- === 4B: 痛点唤醒 B === -->
+    <div class="video-card">
+      <div class="video-header"><span class="video-type">④ 痛点唤醒 · 细纹/暗沉/松弛场景切入</span><span class="video-version ver-b">版本B · 高能短版 15s</span></div>
+      <div class="video-body">
+        <div class="video-duration">⏱ 15秒 | BGM：悬疑音效→燃向转场</div>
+        <div class="script-line"><span class="script-time">0-2s</span><span class="script-text"><span class="script-hook">【钩子】</span>"你的脸，正在偷偷变老..."（慢动作放大细纹）</span></div>
+        <div class="script-line"><span class="script-time">2-7s</span><span class="script-text">(转快节奏) 别慌！六胜肽+胶原！直接把时间拨回去！（效果对比闪现）</span></div>
+        <div class="script-line"><span class="script-time">7-11s</span><span class="script-text">25岁以后的女生，这个真的刚需！</span></div>
+        <div class="script-line"><span class="script-time">11-15s</span><span class="script-text">双11半价！给自己一个变美的机会吧！</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- AB Test Spec Table -->
+  <div class="spec-h3" style="margin-top:36px;">AB测试技术规格对比</div>
+  <table class="spec-table">
+    <thead><tr><th>参数</th><th>版本A（标准种草）</th><th>版本B（高能短版）</th></tr></thead>
+    <tbody>
+      <tr><td>时长</td><td>30 秒</td><td>15 秒</td></tr>
+      <tr><td>BGM风格</td><td>轻松Vlog风（温馨/治愈）</td><td>卡点节奏感强（悬疑→燃）</td></tr>
+      <tr><td>钩子位置</td><td>无强制钩子，自然引入</td><td>前2-3秒必须抛出强钩子</td></tr>
+      <tr><td>字幕风格</td><td>圆体/手写体，中号</td><td>大号粗体，关键信息闪烁</td></tr>
+      <tr><td>封面风格</td><td>生活化场景+温和标题</td><td>强对比色+震撼标题+价格大字</td></tr>
+      <tr><td>人设语气</td><td>像闺蜜聊天分享</td><td>像发现宝藏急切安利</td></tr>
+      <tr><td>目标完播率基准</td><td>≥ 28%</td><td>≥ 40%（短内容更高要求）</td></tr>
+    </tbody>
+  </table>
+
+  <!-- All 30 Videos Overview -->
+  <div class="spec-h3">全部30条视频清单（5 SKU × 4 类别 × 2 版本 = 含扩展共30条）</div>
+  <table class="spec-table">
+    <thead><tr><th>#</th><th>类别</th><th>主题/SKU</th><th>版本A (30s)</th><th>版本B (15s)</th></tr></thead>
+    <tbody>
+      <tr><td>1-2</td><td>单品种草</td><td>SKU_01 六胜肽精华</td><td>✅ 见上方卡片</td><td>✅ 见上方卡片</td></tr>
+      <tr><td>3-4</td><td>单品种草</td><td>SKU_02 胶原蛋白面霜</td><td>结构同1A（干皮切入）</td><td>结构同1B（救星钩子）</td></tr>
+      <tr><td>5-6</td><td>单品种草</td><td>SKU_03 寡肽祛痘精华</td><td>"熬夜爆痘"痛点切入</td><td>"明晚见前任但今晚爆痘"</td></tr>
+      <tr><td>7-8</td><td>单品种草</td><td>SKU_04 胜肽紧致眼霜</td><td>"黑眼圈+细纹"困扰切入</td><td>"别人说你看起来很累？"</td></tr>
+      <tr><td>9-10</td><td>单品种草</td><td>SKU_05 多肽抗衰面膜套装</td><td>"急救护肤"仪式感展示</td><td>"明天拍证件照脸色很差"</td></tr>
+      <tr><td>11-12</td><td>活动动员</td><td>全场利益点（预热期）</td><td>✅ 见上方卡片</td><td>✅ 见上方卡片</td></tr>
+      <tr><td>13-14</td><td>活动动员</td><td>利益点（爆发期微调）</td><td>同2A + 库存倒计时元素</td><td>同2B + 更紧迫CTA</td></tr>
+      <tr><td>15-16</td><td>活动动员</td><td>利益点（冲刺期微调）</td><td>最后几小时紧迫叙事</td><td>仅剩N件倒数叙事</td></tr>
+      <tr><td>17-18</td><td>活动动员</td><td>利益点（返场期）</td><td>"没抢到的还有机会"</td><td>"返场补货速抢"</td></tr>
+      <tr><td>19-20</td><td>活动动员</td><td>利益点（收官总结）</td><td>战报回顾+感谢</td><td>高光数据闪现</td></tr>
+      <tr><td>21-22</td><td>凑单攻略</td><td>最划算组合方案</td><td>✅ 见上方卡片</td><td>✅ 见上方卡片</td></tr>
+      <tr><td>23-24</td><td>凑单攻略</td><td>学生党平价组合</td><td>"预算200怎么买最值"</td><td>"生活费有限也能冲"</td></tr>
+      <tr><td>25-26</td><td>凑单攻略</td><td>送礼套装方案</td><td>"送妈妈/送闺蜜选这套"</td><td>"送礼不踩雷公式"</td></tr>
+      <tr><td>27-28</td><td>凑单攻略</td><td>囤货划算对比</td><td>"一次囤半年vs月买"算账</td><td>"囤货立省XXX元"</td></tr>
+      <tr><td>29-30</td><td>凑单攻略</td><td>新人首单最优解</td><td>"第一次买推荐这个"</td><td>"新人券叠用教程"</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ========== 6. 文件命名规范 & 交付清单 ========== -->
+<div class="section" id="naming">
+  <h2 class="section-title">文件命名规范 & 交付清单</h2>
+  <p class="section-desc">统一的命名规则确保全团队协作效率，支持自动化批量处理</p>
+
+  <table class="spec-table">
+    <thead><tr><th>物料类型</th><th>命名格式示例</th><th>规则说明</th></tr></thead>
+    <tbody>
+      <tr><td>主推品海报</td><td><code>主推_SKU01_淘宝_800x800.jpg</code></td><td>{类型}_{SKU编号}_{平台}_{尺寸}.jpg</td></tr>
+      <tr><td>氛围海报</td><td><code>氛围_双11总动员_小红书_1080x1440.jpg</code></td><td>{类型}_{主题}_{平台}_{尺寸}.jpg</td></tr>
+      <tr><td>倒计时海报</td><td><code>倒计时_距结束3天_通用_1080x1440.jpg</code></td><td>{类型}_{时间描述}_适用范围_{尺寸}.jpg</td></tr>
+      <tr><td>优惠券海报</td><td><code>优惠券_满500减100_淘宝_800x800.jpg</code></td><td>{类型}_{优惠规则}_{平台}_{尺寸}.jpg</td></tr>
+      <tr><td>商品图-淘宝</td><td><code>商品_SKU01_淘宝白底_800x800.jpg</code></td><td>{类型}_{SKU}_{用途}_{尺寸}</td></tr>
+      <tr><td>商品图-小红书</td><td><code>商品_SKU01_小红书氛围_1080x1440.png</code></td><td>PNG保留透明/标签图层</td></tr>
+      <tr><td>商品图-抖音</td><td><code>商品_SKU01_抖音竖版_1080x1920.jpg</code></td><td>9:16手机全屏比例</td></tr>
+      <tr><td>商品图-公众号</td><td><code>商品_SKU01_公众号横幅_900x383.jpg</code></td><td>2.35:1公众号头图标准</td></tr>
+      <tr><td>场景合成版</td><td><code>商品_SKU01_场景合成_小红书_1080x1440.png</code></td><td>明星款SKU_01~05额外输出的一组</td></tr>
+      <tr><td>种草视频-A版</td><td><code>视频_单品种草_SKU01_A版_30s.mp4</code></td><td>{类型}_{类别}_{主题}_{版本}_{时长}</td></tr>
+      <tr><td>种草视频-B版</td><td><code>视频_单品种草_SKU01_B版_15s.mp4</code></td><td>B版为高能短版带强钩子开头</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ========== Footer ========== -->
+<div class="footer">
+  <p><strong>XX肽颜 · 双11大促全套物料 Demo</strong> | 以肽养肤 · 科学抗衰</p>
+  <p style="margin-top:10px;">完整交付：<b>200+</b> 海报文件 · <b>425</b> 商品图成品 · <b>30</b> 条种草视频（含AB版）· <b>4</b> 大平台全覆盖</p>
+  <p style="margin-top:6px;opacity:0.6;">Demo 使用 Emoji 占位产品图 · 正式生产替换为真实素材 · Logo 待上传</p>
+</div>
+
+</body>
+</html>
