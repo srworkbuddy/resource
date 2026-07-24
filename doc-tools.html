@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>文档处理工具集 | Demo</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --primary: #6366F1;
+    --primary-light: #818CF8;
+    --primary-dark: #4F46E5;
+    --secondary: #10B981;
+    --secondary-light: #34D399;
+    --accent: #F59E0B;
+    --accent-light: #FBBF24;
+    --danger: #EF4444;
+    --danger-light: #F87171;
+    --bg: #F8FAFC;
+    --bg-card: #FFFFFF;
+    --text: #1E293B;
+    --text-secondary: #64748B;
+    --text-light: #94A3B8;
+    --border: #E2E8F0;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+    --shadow-lg: 0 12px 40px rgba(0,0,0,0.12);
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-lg: 20px;
+    --radius-xl: 28px;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, 'PingFang SC', 'Noto Sans CJK SC', sans-serif;
+    background: var(--bg); color: var(--text); line-height: 1.6; -webkit-font-smoothing: antialiased;
+  }
+
+  /* ===== NAV ===== */
+  .nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(255,255,255,0.85); backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-inner { max-width: 1280px; margin: 0 auto; padding: 0 28px; display: flex; align-items: center; height: 60px; justify-content: space-between; }
+  .nav-brand { font-size: 18px; font-weight: 800; color: var(--text); display: flex; align-items: center; gap: 10px; }
+  .nav-icon { width: 34px; height: 34px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 16px; }
+  .nav-links { display: flex; gap: 2px; }
+  .nav-link { padding: 7px 16px; border-radius: 20px; font-size: 13.5px; font-weight: 500; color: var(--text-secondary); text-decoration: none; transition: all 0.25s; cursor: pointer; }
+  .nav-link:hover { background: #EEF2FF; color: var(--primary); }
+  .nav-link.active { background: var(--primary); color: white; }
+
+  /* ===== HERO ===== */
+  .hero { padding: 120px 24px 70px; text-align: center; position: relative; overflow: hidden; }
+  .hero::before {
+    content:''; position:absolute; top:-200px;left:50%;transform:translateX(-50%);
+    width:800px;height:800px;background:radial-gradient(circle,rgba(99,102,241,0.08) 0%,transparent 70%);
+  }
+  .hero-badge {
+    display:inline-flex;align-items:center;gap:7px;padding:7px 18px;border-radius:30px;
+    background:#EEF2FF;color:var(--primary);font-size:13px;font-weight:600;margin-bottom:22px;
+  }
+  .hero-title { font-size: clamp(32px,5vw,52px); font-weight: 800; letter-spacing: -0.8px; margin-bottom: 14px; }
+  .hero-title span { background: linear-gradient(135deg, var(--primary), #A78BFA); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  .hero-desc { font-size: 17px; color: var(--text-secondary); max-width: 580px; margin: 0 auto 36px; }
+  .hero-stats { display:flex; justify-content:center; gap:40px; flex-wrap:wrap; margin-top:42px; }
+  .stat-item { text-align:center; }
+  .stat-num { font-size:38px;font-weight:800;color:var(--primary);line-height:1; }
+  .stat-label { font-size:12.5px;color:var(--text-light);margin-top:4px; }
+
+  /* ===== SECTION ===== */
+  .section { max-width: 1280px; margin: 0 auto; padding: 70px 24px; }
+  .sec-header { text-align:center; margin-bottom:48px; }
+  .sec-tag { font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--primary);margin-bottom:10px; }
+  .sec-title { font-size:clamp(24px,3.5vw,36px);font-weight:800;color:var(--text);letter-spacing:-0.5px; }
+  .sec-desc { font-size:15.5px;color:var(--text-secondary);max-width:520px;margin:10px auto 0; }
+
+  /* ===== UPLOAD ZONE ===== */
+  .upload-zone {
+    border: 2.5px dashed var(--border); border-radius: var(--radius-xl);
+    padding: 64px 32px; text-align: center; cursor: pointer;
+    transition: all 0.35s; background: var(--bg-card); position: relative; overflow: hidden;
+  }
+  .upload-zone:hover, .upload-zone.dragover {
+    border-color: var(--primary); background: #EEF2FF;
+    transform: translateY(-2px); box-shadow: var(--shadow-md);
+  }
+  .upload-zone.dragover { transform: scale(1.01); }
+  .upload-icon { font-size:56px;margin-bottom:16px;display:block; }
+  .upload-title { font-size:20px;font-weight:700;margin-bottom:6px; }
+  .upload-sub { font-size:14px;color:var(--text-secondary); }
+  .upload-formats { display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:20px; }
+  .fmt-tag { padding:4px 12px;border-radius:6px;font-size:11.5px;font-weight:600;background:#F1F5F9;color:var(--text-secondary); }
+  .upload-input { display:none; }
+
+  /* ===== TOOL CARDS GRID ===== */
+  .tools-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:22px; margin-top:40px; }
+  .tool-card {
+    background:var(--bg-card);border-radius:var(--radius-lg);padding:28px 24px;
+    box-shadow:var(--shadow-sm);transition:all 0.35s;cursor:pointer;border:2px solid transparent;
+    position:relative;overflow:hidden;
+  }
+  .tool-card:hover { transform:translateY(-5px);box-shadow:var(--shadow-lg);border-color:var(--primary-light); }
+  .tool-card-header { display:flex;align-items:center;gap:14px;margin-bottom:16px; }
+  .tool-icon {
+    width:50px;height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;
+    font-size:24px;flex-shrink:0;
+  }
+  .tool-name { font-size:17px;font-weight:700; }
+  .tool-desc { font-size:13.5px;color:var(--text-secondary);line-height:1.6;margin-bottom:16px; }
+  .tool-tags { display:flex;gap:6px;flex-wrap:wrap; }
+  .tt { padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600; }
+  .tool-badge {
+    position:absolute;top:14px;right:14px;padding:3px 10px;border-radius:8px;
+    font-size:10.5px;font-weight:700;
+  }
+
+  /* ===== PROCESSING PANEL ===== */
+  .process-panel {
+    background:var(--bg-card);border-radius:var(--radius-xl);overflow:hidden;
+    box-shadow:var(--shadow-md);margin-top:44px;display:none;
+  }
+  .process-panel.active { display:block; animation: slideUp 0.4s ease; }
+  @keyframes slideUp { from{opacity:0;transform:translateY(20px);} to{opacity:1;transform:translateY(0);} }
+  .pp-header {
+    padding:22px 28px;display:flex;align-items:center;justify-content:space-between;
+    border-bottom:1px solid var(--border);background:#FAFBFC;
+  }
+  .pp-title { font-size:17px;font-weight:700;display:flex;align-items:center;gap:10px; }
+  .pp-close { width:32px;height:32px;border-radius:8px;border:none;background:#F1F5F9;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;color:var(--text-secondary);transition:all 0.2s; }
+  .pp-close:hover { background:#EF4444;color:white; }
+  .pp-body { padding:28px; }
+
+  /* File List */
+  .file-list { margin-bottom:24px; }
+  .file-item {
+    display:flex;align-items:center;gap:14px;padding:14px 16px;
+    background:#F8FAFC;border-radius:var(--radius-md);margin-bottom:10px;
+    transition:all 0.2s;border:1px solid transparent;
+  }
+  .file-item:hover { border-color:var(--border);background:white; }
+  .fi-icon { width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0; }
+  .fi-info { flex:1;min-width:0; }
+  .fi-name { font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
+  .fi-meta { font-size:12px;color:var(--text-light);margin-top:2px; }
+  .fi-status { font-size:12px;font-weight:600;padding:3px 10px;border-radius:6px;white-space:nowrap; }
+  .fi-status.pending { background:#FEF3C7;color:#D97706; }
+  .fi-status.processing { background:#DBEAFE;color:#2563EB; animation:pulse 1.5s infinite; }
+  .fi-status.done { background:#D1FAE5;color:#059669; }
+  .fi-status.error { background:#FEE2E2;color:#DC2626; }
+  @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.5;} }
+
+  /* Progress Bar */
+  .progress-wrap { margin-bottom:24px; }
+  .progress-label { display:flex;justify-content:space-between;margin-bottom:8px;font-size:13px;font-weight:600; }
+  .progress-bar { height:10px;background:#E2E8F0;border-radius:5px;overflow:hidden; }
+  .progress-fill { height:100%;background:linear-gradient(90deg,var(--primary),var(--primary-light));border-radius:5px;width:0%;transition:width 0.4s ease; }
+  .progress-fill.success { background:linear-gradient(90deg,var(--secondary),var(--secondary-light)); }
+
+  /* Options */
+  .opts-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;margin-bottom:24px; }
+  .opt-group { background:#F8FAFC;border-radius:var(--radius-md);padding:16px; }
+  .opt-label { font-size:12px;font-weight:700;color:var(--text-secondary);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px; }
+  .opt-select, .opt-input { width:100%;padding:9px 13px;border:1.5px solid var(--border);border-radius:8px;font-size:13.5px;background:white;color:var(--text);outline:none;transition:border-color 0.2s; }
+  .opt-select:focus, .opt-input:focus { border-color:var(--primary);box-shadow:0 0 0 3px rgba(99,102,241,0.1); }
+
+  /* Action Buttons */
+  .action-bar { display:flex;gap:12px;justify-content:flex-end;flex-wrap:wrap; }
+  .btn {
+    padding:11px 26px;border-radius:10px;font-size:14px;font-weight:600;
+    border:none;cursor:pointer;transition:all 0.25s;display:inline-flex;align-items:center;gap:8px;
+  }
+  .btn-primary { background:var(--primary);color:white; }
+  .btn-primary:hover { background:var(--primary-dark);transform:translateY(-1px);box-shadow:0 4px 14px rgba(99,102,241,0.35); }
+  .btn-success { background:var(--secondary);color:white; }
+  .btn-success:hover { background:#059669;transform:translateY(-1px);box-shadow:0 4px 14px rgba(16,185,129,0.35); }
+  .btn-outline { background:white;color:var(--text-secondary);border:1.5px solid var(--border); }
+  .btn-outline:hover { border-color:var(--primary);color:var(--primary); }
+  .btn:disabled { opacity:0.5;cursor:not-allowed;transform:none!important;box-shadow:none!important; }
+
+  /* ===== RESULT AREA ===== */
+  .result-area { margin-top:24px;display:none; }
+  .result-area.active { display:block; animation:slideUp 0.4s ease; }
+  .result-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px; }
+  .result-card {
+    background:#F8FAFC;border-radius:var(--radius-md);padding:20px;text-align:center;
+    border:1px solid var(--border);transition:all 0.25s;
+  }
+  .result-card:hover { border-color:var(--primary-light);box-shadow:var(--shadow-sm); }
+  .rc-icon { font-size:40px;margin-bottom:10px; }
+  .rc-name { font-size:13px;font-weight:600;margin-bottom:4px;word-break:break-all; }
+  .rc-size { font-size:12px;color:var(--text-light);margin-bottom:12px; }
+  .rc-btn { width:100%;padding:8px;border-radius:8px;font-size:12.5px;font-weight:600;border:none;cursor:pointer;background:var(--primary);color:white;transition:all 0.2s; }
+  .rc-btn:hover { background:var(--primary-dark); }
+
+  /* ===== PREVIEW PANEL ===== */
+  .preview-panel {
+    background:var(--bg-card);border-radius:var(--radius-xl);overflow:hidden;
+    box-shadow:var(--shadow-md);margin-top:44px;display:none;
+  }
+  .preview-panel.active { display:block; animation:slideUp 0.4s ease; }
+  .pv-header { padding:18px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between; }
+  .pv-body { padding:28px;display:flex;justify-content:center;align-items:center;min-height:350px;background:#F8FAFC; }
+  .pv-placeholder { text-align:center;color:var(--text-light); }
+  .pv-placeholder-icon { font-size:64px;margin-bottom:12px;opacity:0.3; }
+  .preview-img { max-width:100%;max-height:450px;border-radius:var(--radius-md);box-shadow:var(--shadow-md); }
+
+  /* ===== WORKFLOW SECTION ===== */
+  .workflow-section { background:var(--bg-card);border-radius:var(--radius-xl);padding:56px 40px;box-shadow:var(--shadow-sm); }
+  .wf-steps { display:flex;align-items:flex-start;justify-content:center;gap:0;margin-top:44px;flex-wrap:wrap; }
+  .wf-step { display:flex;flex-direction:column;align-items:center;width:180px;text-align:center;position:relative; }
+  .wf-num {
+    width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    font-size:20px;font-weight:800;color:white;margin-bottom:14px;
+    box-shadow:0 4px 16px rgba(99,102,241,0.3);
+  }
+  .wf-title { font-size:15px;font-weight:700;margin-bottom:4px; }
+  .wf-desc { font-size:12.5px;color:var(--text-light);line-height:1.5; }
+  .wf-arrow { font-size:24px;color:var(--border);margin:0 6px;padding-top:24px; }
+
+  /* ===== FEATURE TABLE ===== */
+  .feat-table-wrap { margin-top:44px;border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-sm); }
+  .feat-table { width:100%;border-collapse:collapse;background:white; }
+  .feat-table th { background:var(--text);color:white;padding:14px 18px;font-size:13px;font-weight:600;text-align:left; }
+  .feat-table th:first-child{border-radius:0;}
+  .feat-table td { padding:14px 18px;font-size:13.5px;border-bottom:1px solid var(--border); }
+  .feat-table tr:hover td { background:#FAFBFC; }
+  .check { color:var(--secondary);font-weight:700; }
+  .partial { color:var(--accent);font-weight:700; }
+  .cross { color:var(--text-light); }
+
+  /* ===== FOOTER ===== */
+  .footer { text-align:center;padding:40px 24px;color:var(--text-light);font-size:13px;border-top:1px solid var(--border);margin-top:40px; }
+
+  /* ===== TOAST ===== */
+  .toast-container { position:fixed;top:76px;right:24px;z-index:999;display:flex;flex-direction:column;gap:8px; }
+  .toast {
+    padding:14px 20px;border-radius:12px;font-size:13.5px;font-weight:500;
+    box-shadow:var(--shadow-lg);animation:toastIn 0.35s ease;display:flex;align-items:center;gap:10px;min-width:280px;
+  }
+  .toast.success { background:white;border-left:4px solid var(--secondary);color:var(--text); }
+  .toast.error { background:white;border-left:4px solid var(--danger);color:var(--text); }
+  .toast.info { background:white;border-left:4px solid var(--primary);color:var(--text); }
+  @keyframes toastIn { from{opacity:0;transform:translateX(40px);} to{opacity:1;transform:translateX(0);} }
+
+  /* ===== RESPONSIVE ===== */
+  @media(max-width:768px){
+    .nav-links{display:none;} .tools-grid{grid-template-columns:1fr;}
+    .workflow-section{padding:36px 20px;} .wf-arrow{display:none;}
+    .wf-step{width:140px;} .opts-grid{grid-template-columns:1fr 1fr;}
+    .upload-zone{padding:40px 20px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="nav-brand"><div class="nav-icon">📄</div>文档处理工具集</div>
+    <div class="nav-links">
+      <a class="nav-link active" onclick="scrollTo('hero')">首页</a>
+      <a class="nav-link" onclick="scroll('upload')">上传</a>
+      <a class="nav-link" onclick="scroll('tools')">工具</a>
+      <a class="nav-link" onclick="scroll('workflow')">流程</a>
+      <a class="nav-link" onclick="scroll('features')">功能</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-badge">⚡ 在线处理 · 无需安装 · 隐私安全</div>
+  <h1 class="hero-title">全能<span>文档处理</span><br>工具集 Demo</h1>
+  <p class="hero-desc">支持 PDF、图片、Office 文档等多种格式，提供合并、转换、压缩、批量重命名等一站式处理能力</p>
+  <div class="hero-stats">
+    <div class="stat-item"><div class="stat-num">8+</div><div class="stat-label">处理工具</div></div>
+    <div class="stat-item"><div class="stat-num">20+</div><div class="stat-label">支持格式</div></div>
+    <div class="stat-item"><div class="stat-num">∞</div><div class="stat-label">文件数量</div></div>
+    <div class="stat-item"><div class="stat-num">100%</div><div class="stat-label">本地处理</div></div>
+  </div>
+</section>
+
+<!-- UPLOAD -->
+<section class="section" id="upload">
+  <div class="sec-header">
+    <div class="sec-tag">Upload</div>
+    <h2 class="sec-title">上传文件开始处理</h2>
+    <p class="sec-desc">拖拽或点击上传，支持批量选择，所有处理均在浏览器本地完成</p>
+  </div>
+
+  <div class="upload-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+    <span class="upload-icon">📁</span>
+    <div class="upload-title">拖拽文件到此处，或点击选择</div>
+    <div class="upload-sub">支持批量上传，单个文件最大 100MB</div>
+    <div class="upload-formats">
+      <span class="fmt-tag">📕 PDF</span>
+      <span class="fmt-tag">🖼️ JPG / PNG / WEBP / GIF</span>
+      <span class="fmt-tag">📝 DOC / DOCX</span>
+      <span class="fmt-tag">📊 XLS / XLSX</span>
+      <span class="fmt-tag">📋 TXT / CSV</span>
+      <span class="fmt-tag">🗂️ ZIP / RAR</span>
+    </div>
+    <input type="file" class="upload-input" id="fileInput" multiple accept=".pdf,.jpg,.jpeg,.png,.webp,.gif,.doc,.docx,.xls,.xlsx,.txt,.csv,.zip,.rar">
+  </div>
+
+  <!-- File List Preview -->
+  <div id="fileListPreview" style="display:none;margin-top:24px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+      <span style="font-size:15px;font-weight:700;">已选文件 (<span id="fileCount">0</span>)</span>
+      <button class="btn btn-outline" style="padding:7px 16px;font-size:12.5px;" onclick="clearFiles()">清空</button>
+    </div>
+    <div id="fileListContainer"></div>
+    <div style="margin-top:16px;text-align:right;">
+      <button class="btn btn-primary" onclick="startProcessing()">开始处理 →</button>
+    </div>
+  </div>
+</section>
+
+<!-- TOOLS -->
+<section class="section" id="tools">
+  <div class="sec-header">
+    <div class="sec-tag">Toolbox</div>
+    <h2 class="sec-title">处理工具</h2>
+    <p class="sec-desc">选择需要的处理功能，一键完成文档操作</p>
+  </div>
+
+  <div class="tools-grid">
+    <!-- PDF Merge -->
+    <div class="tool-card" onclick="selectTool('pdf-merge')">
+      <div class="tool-badge" style="background:#EEF2FF;color:var(--primary);">热门</div>
+      <div class="tool-card-header">
+        <div class="tool-icon" style="background:#EEF2FF;color:var(--primary);">📑</div>
+        <div class="tool-name">PDF 合并</div>
+      </div>
+      <div class="tool-desc">将多个 PDF 文件合并为一个，支持调整顺序、删除页面</div>
+      <div class="tool-tags">
+        <span class="tt" style="background:#EEF2FF;color:var(--primary);">PDF</span>
+        <span class="tt" style="background:#F0FDF4;color:var(--secondary);">批量</span>
+        <span class="tt" style="background:#FFF7ED;color:var(--accent);">免费</span>
+      </div>
+    </div>
+
+    <!-- Image Compress -->
+    <div class="tool-card" onclick="selectTool('img-compress')">
+      <div class="tool-card-header">
+        <div class="tool-icon" style="background:#FEF3C7;color:#D97706;">🗜️</div>
+        <div class="tool-name">图片压缩</div>
+      </div>
+      <div class="tool-desc">智能压缩图片体积，保持视觉质量不变，最高可减小 80%</div>
+      <div class="tool-tags">
+        <span class="tt" style="background:#FEF3C7;color:#D97706;">JPG/PNG/WEBP</span>
+        <span class="tt" style="background:#F0FDF4;color:var(--secondary);">无损/有损</span>
+      </div>
+    </div>
+
+    <!-- Format Convert -->
+    <div class="tool-card" onclick="selectTool('convert')">
+      <div class="tool-card-header">
+        <div class="tool-icon" style="background:#DBEAFE;color:#2563EB;">🔄</div>
+        <div class="tool-name">格式转换</div>
+      </div>
+      <div class="tool-desc">PDF ↔ 图片、Word ↔ PDF、图片互转等 20+ 种格式自由转换</div>
+      <div class="tool-tags">
+        <span class="tt" style="background:#DBEAFE;color:#2563EB;">多格式</span>
+        <span class="tt" style="background:#FDF4FF;color:#A855F7;">批量</span>
+      </div>
+    </div>
+
+    <!-- Batch Rename -->
+    <div class="tool-card" onclick="selectTool('rename')">
+      <div class="tool-card-header">
+        <div class="tool-icon" style="background:#FCE7F3;color:#DB2777;">✏️</div>
+        <div class="tool-name">批量重命名</div>
+      </div>
+      <div class="tool-desc">按规则批量重命名文件：添加前缀后缀、序号、日期、替换文本等</div>
+      <div class="tool-tags">
+        <span class="tt" style="background:#FCE7F3;color:#DB2777;">规则自定义</span>
+        <span class="tt" style="background:#F0FDF4;color:var(--secondary);">预览</span>
+      </div>
+    </div>
+
+    <!-- PDF to Images -->
+    <div class="tool-card" onclick="selectTool('pdf2img')">
+      <div class="tool-card-header">
+        <div class="tool-icon" style="background:#EDF2F7;color:#475569;">🖼️</div>
+        <div class="tool-name">PDF 转图片</div>
+      </div>
+      <div class="tool-desc">将 PDF 每页导出为高清图片，支持 PNG/JPG/WebP 格式</div>
+      <div class="tool-tags">
+        <span class="tt" style="background:#EDF2F7;color:#475569;">高清导出</span>
+        <span class="tt" style="background:#FFF7ED;color:var(--accent);">选页</span>
+      </div>
+    </div>
+
+    <!-- Watermark -->
+    <div class="tool-card" onclick="selectTool('watermark')">
+      <div class="tool-card-header">
+        <div class="tool-icon" style="background:#ECFCCB;color:#65A30D;">💧</div>
+        <div class="tool-name">水印添加</div>
+      </div>
+      <div class="tool-desc">为图片/PDF 添加文字或图片水印，支持位置、透明度调节</div>
+      <div class="tool-tags">
+        <span class="tt" style="background:#ECFCCB;color:#65A30D;">文字/图片</span>
+        <span class="tt" style="background:#FEF3C7;color:#D97706;">透明度</span>
+      </div>
+    </div>
+
+    <!-- OCR -->
+    <div class="tool-card" onclick="selectTool('ocr')">
+      <div class="tool-badge" style="background:#FEF3C7;color:#D97706;">AI</div>
+      <div class="tool-card-header">
+        <div class="tool-icon" style="background:#FFF7ED;color:#EA580C;">🔍</div>
+        <div class="tool-name">OCR 文字识别</div>
+      </div>
+      <div class="tool-desc">AI 驱动 OCR，从图片/PDF 中精准提取文字，支持中英文混合</div>
+      <div class="tool-tags">
+        <span class="tt" style="background:#FFF7ED;color:#EA580C;">AI 识别</span>
+        <span class="tt" style="background:#F0FDF4;color:var(--secondary);">导出TXT</span>
+      </div>
+    </div>
+
+    <!-- Split -->
+    <div class="tool-card" onclick="selectTool('split')">
+      <div class="tool-card-header">
+        <div class="tool-icon" style="background:#F3E8FF;color:#9333EA;">✂️</div>
+        <div class="tool-name">文件拆分</div>
+      </div>
+      <div class="tool-desc">按页码拆分 PDF、按Sheet拆分 Excel、按范围拆分大文件</div>
+      <div class="tool-tags">
+        <span class="tt" style="background:#F3E8FF;color:#9333EA;">PDF/Excel</span>
+        <span class="tt" style="background:#FEF3C7;color:#D97706;">精确选区</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESSING PANEL (Dynamic) -->
+<div class="section" style="max-width:1280px;margin:0 auto;">
+  <div class="process-panel" id="processPanel">
+    <div class="pp-header">
+      <div class="pp-title"><span id="panelIcon">🔧</span> <span id="panelTitle">处理面板</span></div>
+      <button class="pp-close" onclick="closePanel()">✕</button>
+    </div>
+    <div class="pp-body">
+      <!-- Files -->
+      <div class="file-list" id="processFileList"></div>
+
+      <!-- Options (dynamic) -->
+      <div class="opts-grid" id="optsGrid"></div>
+
+      <!-- Progress -->
+      <div class="progress-wrap" id="progressWrap" style="display:none;">
+        <div class="progress-label">
+          <span id="progressText">处理中...</span>
+          <span id="progressPct">0%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      </div>
+
+      <!-- Actions -->
+      <div class="action-bar">
+        <button class="btn btn-outline" onclick="closePanel()">取消</button>
+        <button class="btn btn-primary" id="startBtn" onclick="runProcess()">▶ 开始处理</button>
+      </div>
+
+      <!-- Results -->
+      <div class="result-area" id="resultArea">
+        <h4 style="font-size:15px;font-weight:700;margin-bottom:16px;">✅ 处理完成 — 点击下载</h4>
+        <div class="result-grid" id="resultGrid"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PREVIEW PANEL -->
+<div class="section" style="max-width:1280px;margin:0 auto;">
+  <div class="preview-panel" id="previewPanel">
+    <div class="pv-header">
+      <span style="font-weight:700;" id="previewTitle">文件预览</span>
+      <button class="btn btn-outline" style="padding:6px 14px;font-size:12px;" onclick="document.getElementById('previewPanel').classList.remove('active')">关闭</button>
+    </div>
+    <div class="pv-body" id="previewBody">
+      <div class="pv-placeholder">
+        <div class="pv-placeholder-icon">👁️</div>
+        <div>选择一个文件进行预览</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- WORKFLOW -->
+<section class="section" id="workflow">
+  <div class="workflow-section">
+    <div class="sec-header">
+      <div class="sec-tag">Workflow</div>
+      <h2 class="sec-title">处理流程</h2>
+      <p class="sec-desc">三步完成任何文档操作，简单高效</p>
+    </div>
+    <div class="wf-steps">
+      <div class="wf-step">
+        <div class="wf-num" style="background:linear-gradient(135deg,#6366F1,#4F46E5);">1</div>
+        <div class="wf-title">上传文件</div>
+        <div class="wf-desc">拖拽或点击<br/>支持批量选择<br/>最大 100MB/个</div>
+      </div>
+      <div class="wf-arrow">→</div>
+      <div class="wf-step">
+        <div class="wf-num" style="background:linear-gradient(135deg,#8B5CF6,#7C3AED);">2</div>
+        <div class="wf-title">选择工具</div>
+        <div class="wf-desc">选择处理类型<br/>配置参数选项<br/>实时预览效果</div>
+      </div>
+      <div class="wf-arrow">→</div>
+      <div class="wf-step">
+        <div class="wf-num" style="background:linear-gradient(135deg,#10B981,#059669);">3</div>
+        <div class="wf-title">下载结果</div>
+        <div class="wf-desc">本地处理完成<br/>即时下载文件<br/>隐私安全保障</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES TABLE -->
+<section class="section" id="features">
+  <div class="sec-header">
+    <div class="sec-tag">Features</div>
+    <h2 class="sec-title">功能对比</h2>
+    <p class="sec-desc">全面覆盖主流文档处理需求</p>
+  </div>
+  <div class="feat-table-wrap">
+    <table class="feat-table">
+      <thead>
+        <tr><th>功能</th><th>支持格式</th><th>批量处理</th><th>处理方式</th><th>输出质量</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><b>PDF 合并</b></td><td>PDF</td><td><span class="check">✓ 支持</span></td><td>本地</td><td><span class="check">无损</span></td></tr>
+        <tr style="background:#FAFBFC;"><td><b>图片压缩</b></td><td>JPG/PNG/WEBP/GIF</td><td><span class="check">✓ 支持</span></td><td>本地</td><td><span class="partial">可控</span></td></tr>
+        <tr><td><b>格式转换</b></td><td>20+ 格式</td><td><span class="check">✓ 支持</span></td><td>本地</td><td><span class="check">高清</span></td></tr>
+        <tr style="background:#FAFBFC;"><td><b>批量重命名</b></td><td>全格式</td><td><span class="check">✓ 支持</span></td><td>本地</td><td><span class="check">—</span></td></tr>
+        <tr><td><b>PDF 转图片</b></td><td>PDF → JPG/PNG/WEBP</td><td><span class="partial">按页</span></td><td>本地</td><td><span class="check">高清</span></td></tr>
+        <tr style="background:#FAFBFC;"><td><b>水印添加</b></td><td>JPG/PNG/PDF</td><td><span class="check">✓ 支持</span></td><td>本地</td><td><span class="check">无损</span></td></tr>
+        <tr><td><b>OCR 识别</b></td><td>JPG/PNG/PDF</td><td><span class="check">✓ 支持</span></td><td>AI 本地</td><td><span class="check">95%+</span></td></tr>
+        <tr style="background:#FAFBFC;"><td><b>文件拆分</b></td><td>PDF/Excel</td><td><span class="partial">按区域</span></td><td>本地</td><td><span class="check">无损</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <p>文档处理工具集 Demo · 所有处理均在浏览器本地完成 · 文件不会上传至服务器</p>
+  <p style="margin-top:6px;">Generated by WorkBuddy · Privacy First</p>
+</footer>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+// ========== STATE ==========
+let uploadedFiles = [];
+let currentTool = null;
+
+// Tool definitions
+const tools = {
+  'pdf-merge': {
+    icon:'📑', title:'PDF 合并', accept:'.pdf',
+    opts:[
+      {label:'输出格式',type:'select',options:['PDF','PDF/A'],value:'PDF'},
+      {label:'页面范围',type:'select',options:['全部','自定义范围'],value:'全部'},
+      {label:'书签模式',type:'select',options:['保留','移除'],value:'保留'}
+    ]
+  },
+  'img-compress': {
+    icon:'🗜️', title:'图片压缩', accept:'.jpg,.jpeg,.png,.webp',
+    opts:[
+      {label:'压缩级别',type:'select',options:['轻度(推荐)','中度','高度','极限'],value:'轻度(推荐)'},
+      {label:'输出格式',type:'select',options:['保持原格式','统一转JPG','统一转WEBP'],value:'保持原格式'},
+      {label:'最大尺寸',type:'select',options:['不限制','1920px','1280px','800px'],value:'不限制'}
+    ]
+  },
+  'convert': {
+    icon:'🔄', title:'格式转换', accept:'*',
+    opts:[
+      {label:'目标格式',type:'select',options:['PDF','JPG','PNG','WEBP','DOCX','TXT'],value:'PDF'},
+      {label:'画质质量',type:'select',options:['高质量(推荐)','标准','压缩优先'],value:'高质量(推荐)'},
+      {label:'颜色模式',type:'select',options:['自动','RGB','CMYK','灰度'],value:'自动'}
+    ]
+  },
+  'rename': {
+    icon:'✏️', title:'批量重命名', accept:'*',
+    opts:[
+      {label:'命名规则',type:'select',options:['添加前缀','添加后缀','替换文本','完全重命名'],value:'添加前缀'},
+      {label:'输入内容',type:'input',placeholder:'请输入前缀/后缀/替换内容...'},
+      {label:'起始序号',type:'input',placeholder:'1',value:'1'}
+    ]
+  },
+  'pdf2img': {
+    icon:'🖼️', title:'PDF 转图片', accept:'.pdf',
+    opts:[
+      {label:'输出格式',type:'select',options:['PNG(无损)','JPG(小体积)','WEBP(现代)'],value:'PNG(无损)'},
+      {label:'DPI 分辨率',type:'select',options:['150(快速)','300(标准)','600(高清)'],value:'300(标准)'},
+      {label:'页面范围',type:'select',options:['全部','指定页码'],value:'全部'}
+    ]
+  },
+  'watermark': {
+    icon:'💧', title:'水印添加', accept:'.jpg,.jpeg,.png,.pdf',
+    opts:[
+      {label:'水印类型',type:'select',options:['文字水印','图片水印'],value:'文字水印'},
+      {label:'水印文字',type:'input',placeholder:'请输入水印文字...'},
+      {label:'透明度',type:'select',options:['20%','30%','40%','50%','60%'],value:'30%'},
+      {label:'位置',type:'select',options:['右下角(默认)','居中','左上角','平铺'],value:'右下角(默认)'}
+    ]
+  },
+  'ocr': {
+    icon:'🔍', title:'OCR 文字识别', accept:'.jpg,.jpeg,.png,.pdf',
+    opts:[
+      {label:'识别语言',type:'select',options:['自动检测','中文','英文','中日英混合'],value:'自动检测'},
+      {label:'输出格式',type:'select',options:['纯文本(.txt)','Markdown(.md)','带坐标JSON'],value:'纯文本(.txt)'},
+      {label:'版面分析',type:'select',options:['开启(推荐)','关闭'],value:'开启(推荐)'}
+    ]
+  },
+  'split': {
+    icon:'✂️', title:'文件拆分', accept:'.pdf,.xls,.xlsx',
+    opts:[
+      {label:'拆分方式',type:'select',options:['每N页一个文件','按页码范围','按书签章节'],value:'每N页一个文件'},
+      {label:'间隔数',type:'input',placeholder:'每几个页面拆分为一个文件',value:'1'}
+    ]
+  }
+};
+
+// ========== UPLOAD ==========
+const dropZone = document.getElementById('dropZone');
+const fileInput = document.getElementById('fileInput');
+
+['dragenter','dragover'].forEach(evt => {
+  dropZone.addEventListener(evt, e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+});
+['dragleave','drop'].forEach(evt => {
+  dropZone.addEventListener(evt, e => { e.preventDefault(); dropZone.classList.remove('dragover'); });
+});
+
+dropZone.addEventListener('drop', e => {
+  const files = Array.from(e.dataTransfer.files);
+  addFiles(files);
+});
+
+fileInput.addEventListener('change', e => {
+  const files = Array.from(e.target.files);
+  addFiles(files);
+  fileInput.value = '';
+});
+
+function addFiles(files) {
+  uploadedFiles.push(...files);
+  renderFileList();
+  showToast(`已添加 ${files.length} 个文件`,'info');
+}
+
+function renderFileList() {
+  const preview = document.getElementById('fileListPreview');
+  const container = document.getElementById('fileListContainer');
+  const countEl = document.getElementById('fileCount');
+
+  if (uploadedFiles.length === 0) { preview.style.display='none'; return; }
+  preview.style.display='block';
+  countEl.textContent = uploadedFiles.length;
+
+  container.innerHTML = uploadedFiles.map((f,i) => `
+    <div class="file-item">
+      <div class="fi-icon" style="background:${getFileColor(f.name)};color:white;font-size:16px;">${getFileIcon(f.name)}</div>
+      <div class="fi-info">
+        <div class="fi-name">${f.name}</div>
+        <div class="fi-meta">${formatSize(f.size)} · ${f.type || '未知'}</div>
+      </div>
+      <div class="fi-status pending">待处理</div>
+      <button onclick="removeFile(${i})" style="background:none;border:none;cursor:pointer;font-size:16px;color:var(--text-light);padding:4px 8px;">✕</button>
+    </div>
+  `).join('');
+}
+
+function removeFile(i) { uploadedFiles.splice(i,1); renderFileList(); }
+function clearFiles() { uploadedFiles=[]; renderFileList(); showToast('已清空文件列表','info'); }
+
+// ========== TOOL SELECTION ==========
+function selectTool(toolId) {
+  currentTool = toolId;
+  const tool = tools[toolId];
+  if (!tool) return;
+
+  // If no files uploaded yet, prompt
+  if (uploadedFiles.length === 0) {
+    showToast('请先上传文件','info');
+    scrollTo('upload');
+    return;
+  }
+
+  // Show panel
+  const panel = document.getElementById('processPanel');
+  panel.classList.add('active');
+
+  // Header
+  document.getElementById('panelIcon').textContent = tool.icon;
+  document.getElementById('panelTitle').textContent = tool.title;
+
+  // File list in panel
+  const pfl = document.getElementById('processFileList');
+  pfl.innerHTML = uploadedFiles.map((f,i) => `
+    <div class="file-item">
+      <div class="fi-icon" style="background:${getFileColor(f.name)};color:white;font-size:16px;">${getFileIcon(f.name)}</div>
+      <div class="fi-info"><div class="fi-name">${f.name}</div><div class="fi-meta">${formatSize(f.size)}</div></div>
+      <div class="fi-status pending">待处理</div>
+    </div>
+  `).join('');
+
+  // Options
+  const og = document.getElementById('optsGrid');
+  og.innerHTML = tool.opts.map(o => `
+    <div class="opt-group">
+      <div class="opt-label">${o.label}</div>
+      ${o.type === 'select'
+        ? `<select class="opt-select">${o.options.map(opt => `<option value="${opt}" ${opt===o.value?'selected':''}>${opt}</option>`).join('')}</select>`
+        : `<input class="opt-input" type="text" placeholder="${o.placeholder||''}" value="${o.value||''}">`
+      }
+    </div>
+  `).join('');
+
+  // Reset progress & results
+  document.getElementById('progressWrap').style.display='none';
+  document.getElementById('resultArea').classList.remove('active');
+  document.getElementById('progressFill').style.width='0%';
+  document.getElementById('startBtn').disabled=false;
+
+  scrollTo('processPanel');
+  showToast(`已选择「${tool.title}」工具`,'info');
+}
+
+function closePanel() {
+  document.getElementById('processPanel').classList.remove('active');
+}
+
+// ========== PROCESSING SIMULATION ==========
+async function runProcess() {
+  if (!currentTool || uploadedFiles.length === 0) return;
+
+  const pw = document.getElementById('progressWrap');
+  const pf = document.getElementById('progressFill');
+  const pt = document.getElementById('progressText');
+  const pp = document.getElementById('progressPct');
+  const sb = document.getElementById('startBtn');
+
+  pw.style.display='block';
+  sb.disabled=true;
+
+  // Update file statuses
+  document.querySelectorAll('#processFileList .fi-status').forEach(el => {
+    el.className='fi-status processing'; el.textContent='处理中...';
+  });
+
+  // Simulate progress
+  for (let i=0;i<=100;i+=Math.random()*12+3) {
+    i=Math.min(i,100);
+    pf.style.width=i+'%';
+    pp.textContent=Math.round(i)+'%';
+    pt.textContent=i<100?'正在处理...':'处理完成！';
+    await sleep(120+Math.random()*180);
+  }
+
+  pf.classList.add('success');
+  pt.textContent='✅ 全部完成！';
+
+  // Update file statuses
+  document.querySelectorAll('#processFileList .fi-status').forEach(el => {
+    el.className='fi-status done'; el.textContent='已完成';
+  });
+
+  // Show results
+  showResults();
+  showToast('处理完成！点击下方按钮下载文件','success');
+}
+
+function showResults() {
+  const ra = document.getElementById('resultArea');
+  const rg = document.getElementById('resultGrid');
+  ra.classList.add('active');
+
+  rg.innerHTML = uploadedFiles.map((f,i) => {
+    const ext = f.name.split('.').pop().toLowerCase();
+    const outExt = getOutputExt(currentTool, ext);
+    const outName = f.name.replace(/\.[^.]+$/, `_processed.${outExt}`);
+    const newSize = Math.round(f.size * (0.3 + Math.random()*0.5));
+
+    return `
+      <div class="result-card">
+        <div class="rc-icon">${getFileIcon(outName)}</div>
+        <div class="rc-name">${outName}</div>
+        <div class="rc-size">${formatSize(newSize)}（原 ${formatSize(f.size)}）</div>
+        <button class="rc-btn" onclick="downloadDemo('${outName}')">⬇ 下载</button>
+      </div>
+    `;
+  }).join('');
+}
+
+function downloadDemo(name) {
+  showToast(`「${name}」下载已开始（Demo 模拟）`,'success');
+}
+
+// ========== UTILS ==========
+function getFileIcon(name) {
+  const ext=name.split('.').pop().toLowerCase();
+  const icons={pdf:'📕',doc:'📝',docx:'📝',xls:'📊',xlsx:'📊',txt:'📋',csv:'📊',jpg:'🖼️',jpeg:'🖼️',png:'🖼️',webp:'🖼️',gif:'🎬',zip:'🗂️',rar:'🗂️'};
+  return icons[ext]||'📄';
+}
+function getFileColor(name) {
+  const ext=name.split('.').pop().toLowerCase();
+  const colors={pdf:'#EF4444',doc:'#3B82F6',docx:'#3B82F6',xls:'#10B981',xlsx:'#10B981',txt:'#6B7280',csv:'#10B981',jpg:'#F59E0B',jpeg:'#F59E0B',png:'#8B5CF6',webp:'#8B5CF6',gif:'#EC4899',zip:'#6B7280',rar:'#6B7280'};
+  return colors[ext]||'#6366F1';
+}
+function formatSize(bytes) {
+  if(bytes<1024)return bytes+' B';
+  if(bytes<1048576)return (bytes/1024).toFixed(1)+' KB';
+  return (bytes/1048576).toFixed(1)+' MB';
+}
+function getOutputExt(toolId, inputExt) {
+  const map={'pdf-merge':'pdf','img-compress':inputExt,'convert':'pdf','rename':inputExt,'pdf2img':'png','watermark':inputExt,'ocr':'txt','split':'pdf'};
+  return map[toolId]||inputExt;
+}
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+function scrollTo(id){const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});}
+function scroll(id){scrollTo(id);}
+
+// ========== TOAST ==========
+function showToast(msg,type='info'){
+  const c=document.getElementById('toastContainer');
+  const t=document.createElement('div');
+  t.className=`toast ${type}`;
+  const icons={success:'✅',error:'❌',info:'ℹ️'};
+  t.innerHTML=`<span>${icons[type]||'ℹ️'}</span><span>${msg}</span>`;
+  c.appendChild(t);
+  setTimeout(()=>{t.style.opacity='0';t.style.transform='translateX(40px)';t.style.transition='all 0.3s';setTimeout(()=>t.remove(),300);},3200);
+}
+</script>
+</body>
+</html>
